@@ -25,7 +25,8 @@ affiliate-blog-loop/
 ├── README.md                                     # Este arquivo
 ├── scripts/
 │   ├── article_scaffolder.py                     # Gera esqueleto do artigo por tipo
-│   └── seo_keyword_builder.py                    # Gera candidatas de cauda longa p/ Bloco de SEO
+│   ├── seo_keyword_builder.py                    # Gera candidatas de cauda longa p/ Bloco de SEO
+│   └── wordpress_exporter.py                     # Exporta artigos como WXR p/ importar no WordPress
 ├── references/
 │   ├── mercado-livre-afiliados.md                # Painel, links, comissões, fluxo no WordPress
 │   ├── seo-cauda-longa.md                        # Intenções de busca e fórmulas de cauda longa
@@ -36,11 +37,14 @@ affiliate-blog-loop/
 │   ├── template-comparativo.md                   # Template de comparativo X vs Y
 │   ├── template-noticia-ia.md                    # Template de notícia de IA
 │   ├── template-review.md                        # Template de review individual
-│   └── checklist-publicacao-wordpress.md         # Checklist operacional de publicação
+│   ├── checklist-publicacao-wordpress.md         # Checklist operacional de publicação
+│   └── estilo-tecnopulso.css                     # CSS do blog (Aparência > CSS Adicional)
 └── examples/
     ├── top-10-fones-bluetooth-mercado-livre-2026.md   # Exemplo pronto: Top 10
+    ├── top-10-smartwatches-mercado-livre-2026.md      # Exemplo pronto: Top 10 (smartwatches)
     ├── comparativo-galaxy-s24-vs-iphone-15.md         # Exemplo pronto: comparativo
-    └── noticia-ia-celulares-2026.md                   # Exemplo pronto: notícia de IA
+    ├── noticia-ia-celulares-2026.md                   # Exemplo pronto: notícia de IA
+    └── tecnopulso-import.xml                          # Importação WordPress dos 4 exemplos
 ```
 
 ## Início rápido (3 passos)
@@ -54,6 +58,7 @@ Os scripts rodam sem instalação (Python 3, biblioteca padrão):
 ```bash
 python3 scripts/article_scaffolder.py            # modo demo
 python3 scripts/seo_keyword_builder.py --produto "smartwatch barato" --categoria smartwatches
+python3 scripts/wordpress_exporter.py            # exporta examples/ como rascunhos p/ WordPress
 ```
 
 ## Exemplo de uma iteração do loop
@@ -71,13 +76,16 @@ python3 scripts/seo_keyword_builder.py --produto "smartwatch barato" --categoria
 
 ## Exemplos prontos para publicar
 
-Três artigos completos — um por formato — demonstram o resultado esperado do loop:
+Quatro artigos completos — cobrindo os 4 nichos do blog — demonstram o resultado esperado do loop:
 
-- **Top 10:** [Os 10 Melhores Fones de Ouvido Bluetooth do Mercado Livre em 2026](examples/top-10-fones-bluetooth-mercado-livre-2026.md)
-- **Comparativo:** [Galaxy S24 vs iPhone 15: qual vale mais a pena em 2026?](examples/comparativo-galaxy-s24-vs-iphone-15.md)
+- **Top 10 (fones):** [Os 10 Melhores Fones de Ouvido Bluetooth do Mercado Livre em 2026](examples/top-10-fones-bluetooth-mercado-livre-2026.md)
+- **Top 10 (smartwatches):** [Os 10 Melhores Smartwatches do Mercado Livre em 2026](examples/top-10-smartwatches-mercado-livre-2026.md)
+- **Comparativo (celulares):** [Galaxy S24 vs iPhone 15: qual vale mais a pena em 2026?](examples/comparativo-galaxy-s24-vs-iphone-15.md)
 - **Notícia de IA:** [IA no celular em 2026: Galaxy AI, Apple Intelligence e Gemini na prática](examples/noticia-ia-celulares-2026.md)
 
 Cada um já traz título SEO, meta description, aviso de transparência, marcadores de afiliado e Bloco de SEO — basta plugar os cartões do Mercado Livre e publicar.
+
+**Publicação rápida:** o arquivo [examples/tecnopulso-import.xml](examples/tecnopulso-import.xml) já contém os 4 artigos como rascunhos do WordPress (gerado por `scripts/wordpress_exporter.py`). Importe em *Ferramentas > Importar > WordPress*, substitua cada bloco destacado pelo cartão de produto com o seu link de afiliado e cole o [CSS do blog](assets/estilo-tecnopulso.css) em *Aparência > Personalizar > CSS Adicional*.
 
 ## Documentação completa
 

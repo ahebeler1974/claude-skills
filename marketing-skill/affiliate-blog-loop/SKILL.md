@@ -212,7 +212,7 @@ Estrutura:
 
 ## Ferramentas
 
-Dois scripts Python (biblioteca padrão apenas, sem instalação). Ambos rodam em modo demo sem argumentos, aceitam `--json` para saída de máquina e `--help` para uso completo.
+Três scripts Python (biblioteca padrão apenas, sem instalação). Todos rodam em modo demo sem argumentos, aceitam `--json` para saída de máquina e `--help` para uso completo.
 
 ### scripts/article_scaffolder.py
 
@@ -247,6 +247,23 @@ python3 scripts/seo_keyword_builder.py --produto "fone com cancelamento de ruíd
 ```
 
 **Regra de curadoria:** a ferramenta gera candidatas; você seleciona e ajusta manualmente as 10-15 que o artigo realmente responde. Nunca cole a saída bruta no Bloco de SEO.
+
+### scripts/wordpress_exporter.py
+
+Converte artigos prontos do loop em um arquivo WXR para importar no WordPress (Ferramentas > Importar > WordPress). Os posts entram como **rascunho**, com título, slug, resumo (meta description), categoria detectada pelo nome do arquivo e os marcadores de afiliado destacados visualmente no editor.
+
+```bash
+# Modo demo (sem argumentos — exporta a pasta examples/)
+python3 scripts/wordpress_exporter.py
+
+# Exportar artigos específicos
+python3 scripts/wordpress_exporter.py artigo1.md artigo2.md --saida tecnopulso-import.xml
+
+# Publicação direta (use apenas depois de plugar os cartões de afiliado)
+python3 scripts/wordpress_exporter.py artigo.md --status publish --json
+```
+
+**Fluxo de publicação:** exportar → importar o XML no WordPress → substituir cada bloco destacado pelo cartão de produto com o SEU link de afiliado → aplicar o CSS de `assets/estilo-tecnopulso.css` (Aparência > Personalizar > CSS Adicional) → publicar.
 
 ---
 
