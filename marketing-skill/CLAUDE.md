@@ -22,6 +22,7 @@ This directory contains 43 marketing skills organized into specialist pods.
 - `pricing-strategy/` — Pricing and packaging
 - `content-humanizer/` — Fix AI-sounding content
 - `x-twitter-growth/` — X/Twitter audience growth, tweet composing, competitor analysis
+- `affiliate-blog-loop/` — Mercado Livre affiliate blog loop (PT-BR tech reviews: top 10, comparativos, notícias de IA)
 
 ### Python Tools
 

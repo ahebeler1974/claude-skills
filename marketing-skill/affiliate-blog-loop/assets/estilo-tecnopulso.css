@@ -1,0 +1,195 @@
+/* ============================================================
+   TecnoPulso — Estilo do blog (WordPress)
+   Cole em: Aparência > Personalizar > CSS Adicional
+   Funciona com qualquer tema; ajuste as cores da marca abaixo.
+   ============================================================ */
+
+:root {
+  --tp-primaria: #0f4c81;      /* azul TecnoPulso: confiança e tecnologia */
+  --tp-primaria-escura: #0b3a63;
+  --tp-acao: #16a34a;          /* verde do botão de oferta (ação/compra) */
+  --tp-acao-escura: #15803d;
+  --tp-fundo-suave: #f8fafc;
+  --tp-borda: #e2e8f0;
+  --tp-texto: #1e293b;
+  --tp-alerta-fundo: #fffbeb;
+  --tp-alerta-borda: #d97706;
+}
+
+/* ---------- Tipografia e leitura confortável ---------- */
+
+.entry-content,
+.post-content {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--tp-texto);
+}
+
+.entry-content h2,
+.post-content h2 {
+  color: var(--tp-primaria);
+  border-bottom: 3px solid var(--tp-primaria);
+  padding-bottom: 8px;
+  margin-top: 48px;
+}
+
+.entry-content h3,
+.post-content h3 {
+  color: var(--tp-primaria-escura);
+  margin-top: 36px;
+}
+
+/* ---------- Aviso de transparência de afiliado ---------- */
+
+.entry-content blockquote,
+.post-content blockquote {
+  background: var(--tp-fundo-suave);
+  border-left: 4px solid var(--tp-primaria);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 15px;
+  font-style: normal;
+}
+
+/* ---------- Tabela comparativa ---------- */
+
+.tp-tabela,
+.entry-content table,
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 15px;
+  box-shadow: 0 1px 3px rgba(15, 76, 129, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tp-tabela th,
+.entry-content table th,
+.post-content table th {
+  background: var(--tp-primaria);
+  color: #fff;
+  text-align: left;
+  padding: 12px 14px;
+}
+
+.tp-tabela td,
+.entry-content table td,
+.post-content table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--tp-borda);
+}
+
+.tp-tabela tr:nth-child(even) td,
+.entry-content table tr:nth-child(even) td,
+.post-content table tr:nth-child(even) td {
+  background: var(--tp-fundo-suave);
+}
+
+/* Tabela rolável no celular (mobile-first) */
+@media (max-width: 640px) {
+  .entry-content table,
+  .post-content table,
+  .tp-tabela {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Cartão de produto (envolva o bloco do plugin) ----------
+   No editor, agrupe o cartão do produto dentro de um bloco "Grupo"
+   e adicione a classe adicional: tp-card                            */
+
+.tp-card {
+  border: 1px solid var(--tp-borda);
+  border-top: 4px solid var(--tp-primaria);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin: 28px 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(15, 76, 129, 0.08);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.tp-card:hover {
+  box-shadow: 0 6px 18px rgba(15, 76, 129, 0.16);
+  transform: translateY(-2px);
+}
+
+/* ---------- Botão de oferta (CTA) ----------
+   Adicione a classe tp-btn ao botão "Comprar agora" / "Ver oferta"  */
+
+.tp-btn,
+.tp-card .wp-block-button__link {
+  display: inline-block;
+  background: var(--tp-acao);
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 13px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+
+.tp-btn:hover,
+.tp-card .wp-block-button__link:hover {
+  background: var(--tp-acao-escura);
+}
+
+/* ---------- Caixas de prós e contras ----------
+   Agrupe as listas em blocos "Grupo" com as classes tp-pros / tp-contras */
+
+.tp-pros,
+.tp-contras {
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 15px;
+}
+
+.tp-pros {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.tp-contras {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.tp-pros ul,
+.tp-contras ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+/* ---------- Selo de posição do ranking (opcional) ----------
+   Ex.: <span class="tp-rank">1º</span> antes do nome do produto */
+
+.tp-rank {
+  display: inline-block;
+  background: var(--tp-primaria);
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  min-width: 34px;
+  text-align: center;
+  padding: 6px 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+/* ---------- Lembrete visível dos marcadores pendentes ----------
+   Os rascunhos importados destacam onde plugar cada cartão; este
+   reforço deixa o alerta impossível de ignorar na pré-visualização. */
+
+.entry-content p[style*="dashed"],
+.post-content p[style*="dashed"] {
+  background: var(--tp-alerta-fundo);
+  border: 2px dashed var(--tp-alerta-borda);
+}
