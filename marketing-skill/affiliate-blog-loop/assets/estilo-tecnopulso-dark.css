@@ -1,0 +1,390 @@
+/* ============================================================
+   TecnoPulso — Tema DARK FUTURISTA v2 (WordPress / GeneratePress)
+   Cole em: Aparência > Personalizar > CSS Adicional
+   (substitui integralmente o CSS v1 claro)
+   ============================================================ */
+
+:root {
+  --tp-bg: #070b14;
+  --tp-bg-2: #0b1120;
+  --tp-painel: rgba(15, 23, 42, 0.72);
+  --tp-vidro: rgba(15, 23, 42, 0.55);
+  --tp-borda: rgba(148, 163, 184, 0.14);
+  --tp-borda-neon: rgba(34, 211, 238, 0.45);
+  --tp-ciano: #22d3ee;
+  --tp-ciano-claro: #67e8f9;
+  --tp-violeta: #8b5cf6;
+  --tp-grad: linear-gradient(90deg, #22d3ee, #8b5cf6);
+  --tp-texto: #e2e8f0;
+  --tp-texto-suave: #94a3b8;
+  --tp-texto-fraco: #64748b;
+  --tp-verde: #22c55e;
+  --tp-verde-escuro: #16a34a;
+  --tp-alerta-fundo: rgba(217, 119, 6, 0.12);
+  --tp-alerta-borda: #d97706;
+}
+
+/* ---------- Base escura ---------- */
+
+body {
+  background:
+    radial-gradient(1100px 600px at 90% -10%, rgba(139, 92, 246, 0.16), transparent 60%),
+    radial-gradient(900px 550px at -10% 30%, rgba(34, 211, 238, 0.10), transparent 60%),
+    linear-gradient(160deg, var(--tp-bg) 0%, var(--tp-bg-2) 60%, #0d1428 100%) !important;
+  background-attachment: fixed !important;
+  color: var(--tp-texto);
+}
+
+::selection { background: rgba(34, 211, 238, 0.35); color: #fff; }
+
+/* Barra de rolagem futurista (WebKit) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--tp-bg); }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #22d3ee, #8b5cf6); border-radius: 8px; }
+
+/* ---------- Cabeçalho e navegação ---------- */
+
+.site-header {
+  background: rgba(7, 11, 20, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, #22d3ee, #8b5cf6, transparent) 1;
+}
+
+.site-header .site-title a,
+.main-title a { color: var(--tp-texto) !important; font-weight: 800; letter-spacing: 0.5px; }
+.site-header .site-description { color: var(--tp-texto-suave) !important; }
+
+.main-navigation,
+.main-navigation ul ul { background: rgba(7, 11, 20, 0.92) !important; }
+
+.main-navigation .main-nav ul li a {
+  color: #cbd5e1 !important;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.main-navigation .main-nav ul li a:hover,
+.main-navigation .main-nav ul li.current-menu-item > a {
+  color: var(--tp-ciano-claro) !important;
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+}
+
+/* ---------- Painéis de conteúdo (vidro) ---------- */
+
+.separate-containers .inside-article,
+.separate-containers .comments-area,
+.separate-containers .page-header,
+.one-container .container,
+.sidebar .widget,
+.inside-page-header {
+  background: var(--tp-painel) !important;
+  border: 1px solid var(--tp-borda);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+}
+
+.entry-content, .post-content { font-size: 17px; line-height: 1.75; color: var(--tp-texto); }
+
+h1, h2, h3, h4, .entry-title, .entry-title a { color: #f1f5f9 !important; }
+.entry-title a:hover { color: var(--tp-ciano-claro) !important; }
+
+.entry-content h2 {
+  margin-top: 48px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #22d3ee, #8b5cf6, transparent) 1;
+}
+
+.entry-content h3 { margin-top: 36px; color: var(--tp-ciano-claro) !important; }
+
+.entry-content a { color: #38bdf8; }
+.entry-content a:hover { color: var(--tp-ciano-claro); text-shadow: 0 0 10px rgba(34, 211, 238, 0.45); }
+
+.entry-meta, .posted-on, .byline { color: var(--tp-texto-fraco) !important; }
+.entry-meta a { color: var(--tp-texto-suave) !important; }
+
+/* Selo de categoria nos posts */
+.cat-links a, .tp-posts .taxonomy-category a {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--tp-borda-neon);
+  background: rgba(34, 211, 238, 0.08);
+  color: var(--tp-ciano-claro) !important;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+/* Imagens com moldura tech */
+.entry-content img, .post-image img, .wp-post-image {
+  border-radius: 12px;
+  border: 1px solid var(--tp-borda);
+}
+
+/* ---------- Título gradiente (use a classe em headings) ---------- */
+
+.tp-gradient-text {
+  background: var(--tp-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+}
+
+/* ---------- Aviso de transparência de afiliado ---------- */
+
+.entry-content blockquote {
+  background: var(--tp-vidro);
+  border-left: 3px solid var(--tp-ciano);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+  font-size: 15px;
+  font-style: normal;
+  color: var(--tp-texto-suave);
+  box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.05);
+}
+
+/* ---------- Tabela comparativa ---------- */
+
+.entry-content table, .tp-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 28px 0;
+  font-size: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--tp-borda);
+}
+
+.entry-content table th, .tp-tabela th {
+  background: linear-gradient(90deg, rgba(34, 211, 238, 0.25), rgba(139, 92, 246, 0.25)), #0b1120;
+  color: var(--tp-ciano-claro);
+  text-align: left;
+  padding: 13px 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.entry-content table td, .tp-tabela td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--tp-borda);
+  color: var(--tp-texto);
+  background: rgba(11, 17, 32, 0.6);
+}
+
+.entry-content table tr:nth-child(even) td { background: rgba(15, 23, 42, 0.75); }
+.entry-content table tr:hover td { background: rgba(34, 211, 238, 0.07); }
+
+@media (max-width: 640px) {
+  .entry-content table, .tp-tabela { display: block; overflow-x: auto; white-space: nowrap; }
+}
+
+/* ---------- Botão de oferta (CTA verde neon) ---------- */
+
+.tp-btn,
+.tp-btn .wp-block-button__link,
+.entry-content .wp-block-button__link.tp-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.4px;
+  padding: 14px 30px;
+  border-radius: 10px;
+  border: 1px solid rgba(74, 222, 128, 0.6);
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 0 22px rgba(34, 197, 94, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.tp-btn:hover, .tp-btn .wp-block-button__link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 34px rgba(34, 197, 94, 0.55);
+}
+
+/* ---------- Cartão de produto ---------- */
+
+.tp-card {
+  position: relative;
+  background: var(--tp-painel);
+  border: 1px solid var(--tp-borda);
+  border-radius: 16px;
+  padding: 22px 24px;
+  margin: 28px 0;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.tp-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: 16px 16px 0 0;
+  background: var(--tp-grad);
+}
+
+.tp-card:hover {
+  border-color: var(--tp-borda-neon);
+  box-shadow: 0 8px 40px rgba(34, 211, 238, 0.18);
+  transform: translateY(-3px);
+}
+
+/* Selo de posição do ranking */
+.tp-rank {
+  display: inline-block;
+  background: var(--tp-grad);
+  color: #0b1120;
+  font-weight: 800;
+  font-size: 14px;
+  min-width: 34px;
+  text-align: center;
+  padding: 6px 9px;
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.5);
+}
+
+/* ---------- Prós e contras ---------- */
+
+.tp-pros, .tp-contras {
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 15px;
+  border: 1px solid;
+}
+
+.tp-pros { background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.35); }
+.tp-contras { background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.35); }
+.tp-pros ul, .tp-contras ul { margin: 0; padding-left: 20px; }
+
+/* ---------- Marcadores pendentes de cartão (rascunhos) ---------- */
+
+.entry-content p[style*="dashed"] {
+  background: var(--tp-alerta-fundo) !important;
+  border: 2px dashed var(--tp-alerta-borda) !important;
+  color: #fbbf24 !important;
+}
+
+/* ---------- HOME FUTURISTA (classes do padrão home-tecnopulso.html) ---------- */
+
+.tp-hero {
+  padding: 72px 24px 56px;
+  text-align: center;
+}
+
+.tp-hero h1 {
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+
+.tp-hero p { color: var(--tp-texto-suave); font-size: 19px; max-width: 640px; margin: 0 auto; }
+
+.tp-chips { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 28px; }
+
+.tp-chips .wp-block-button__link {
+  background: rgba(34, 211, 238, 0.08) !important;
+  border: 1px solid var(--tp-borda-neon);
+  color: var(--tp-ciano-claro) !important;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: none;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tp-chips .wp-block-button__link:hover {
+  background: rgba(34, 211, 238, 0.18) !important;
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
+}
+
+.tp-section-title {
+  text-align: center;
+  font-size: 30px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 24px 0 8px;
+}
+
+/* Grade de posts (Query Loop) */
+.tp-posts .wp-block-post {
+  background: var(--tp-painel);
+  border: 1px solid var(--tp-borda);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.tp-posts .wp-block-post:hover {
+  border-color: var(--tp-borda-neon);
+  box-shadow: 0 10px 44px rgba(34, 211, 238, 0.18);
+  transform: translateY(-4px);
+}
+
+.tp-posts .wp-block-post-featured-image { margin: 0; }
+.tp-posts .wp-block-post-featured-image img { border-radius: 0; border: none; width: 100%; }
+
+.tp-posts .taxonomy-category { margin: 16px 20px 0; }
+
+.tp-posts .wp-block-post-title { margin: 10px 20px 0; font-size: 20px; line-height: 1.35; }
+.tp-posts .wp-block-post-title a { color: #f1f5f9; text-decoration: none; }
+.tp-posts .wp-block-post-title a:hover { color: var(--tp-ciano-claro); }
+
+.tp-posts .wp-block-post-excerpt { margin: 10px 20px; color: var(--tp-texto-suave); font-size: 15px; }
+.tp-posts .wp-block-post-excerpt__more-link { color: #38bdf8; font-weight: 700; }
+
+.tp-posts .wp-block-post-date { display: block; margin: 0 20px 18px; color: var(--tp-texto-fraco); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; }
+
+/* ---------- Rodapé ---------- */
+
+.site-footer, .site-info {
+  background: rgba(7, 11, 20, 0.9) !important;
+  color: var(--tp-texto-fraco) !important;
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, #22d3ee, #8b5cf6, transparent) 1;
+}
+
+.site-info a { color: var(--tp-texto-suave) !important; }
+
+/* ---------- Comentários e formulários ---------- */
+
+input[type="text"], input[type="email"], input[type="url"], textarea {
+  background: rgba(11, 17, 32, 0.8) !important;
+  border: 1px solid var(--tp-borda) !important;
+  color: var(--tp-texto) !important;
+  border-radius: 10px;
+}
+
+input[type="submit"], button[type="submit"] {
+  background: var(--tp-grad) !important;
+  color: #0b1120 !important;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 768px) {
+  .tp-hero { padding: 48px 16px 36px; }
+  .entry-content, .post-content { font-size: 16.5px; }
+  .menu-toggle { color: var(--tp-texto) !important; }
+}

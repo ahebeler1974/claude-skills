@@ -38,7 +38,9 @@ affiliate-blog-loop/
 │   ├── template-noticia-ia.md                    # Template de notícia de IA
 │   ├── template-review.md                        # Template de review individual
 │   ├── checklist-publicacao-wordpress.md         # Checklist operacional de publicação
-│   └── estilo-tecnopulso.css                     # CSS do blog (Aparência > CSS Adicional)
+│   ├── estilo-tecnopulso.css                     # CSS do blog v1 — tema claro
+│   ├── estilo-tecnopulso-dark.css                # CSS do blog v2 — dark futurista (recomendado)
+│   └── home-tecnopulso.html                      # Página inicial futurista (blocos Gutenberg)
 └── examples/
     ├── top-10-fones-bluetooth-mercado-livre-2026.md   # Exemplo pronto: Top 10
     ├── top-10-smartwatches-mercado-livre-2026.md      # Exemplo pronto: Top 10 (smartwatches)
