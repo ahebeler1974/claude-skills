@@ -20,11 +20,11 @@ O detalhe importante dessa corrida: parte do processamento acontece **no própri
 
 Cortando o marketing, é isso que a IA embarcada já entrega no uso real em 2026:
 
-- **Tradução de chamadas em tempo real:** você liga para alguém que fala outro idioma e o celular traduz a conversa ao vivo, nos dois sentidos. O Galaxy AI popularizou o recurso, e soluções semelhantes vêm aparecendo nos concorrentes. Para quem trabalha com clientes estrangeiros, é o recurso mais impressionante da leva atual.
+- **Tradução de chamadas em tempo real:** você liga para alguém que fala outro idioma e o celular traduz a conversa ao vivo, nos dois sentidos. O Galaxy AI popularizou o recurso, e soluções semelhantes vêm aparecendo nos concorrentes — o mais impressionante da leva atual.
 - **Resumo de notificações e textos:** a IA condensa aquele grupo de WhatsApp com 200 mensagens, e-mails longos e artigos em poucos parágrafos. Parece detalhe, mas é o recurso que mais gente usa todos os dias sem perceber.
-- **Edição de fotos com IA:** apagar objetos e pessoas do fundo, mover elementos e melhorar fotos tremidas — tudo direto na galeria, sem aplicativo pago nem conhecimento de edição. É o recurso com o "efeito uau" mais imediato.
-- **Assistentes mais contextuais:** o Gemini e equivalentes entendem o que está na sua tela e agem sobre isso — perguntar sobre um vídeo, criar um evento a partir de um print, buscar algo circulando na tela. O assistente deixou de ser uma caixa de perguntas isolada.
-- **Transcrição e resumo de áudios:** gravações de reuniões, aulas e até os áudios intermináveis do WhatsApp viram texto pesquisável, com resumo dos pontos principais. Para estudantes e profissionais, é ganho de tempo real.
+- **Edição de fotos com IA:** apagar objetos e pessoas do fundo, mover elementos e melhorar fotos tremidas — tudo direto na galeria, sem aplicativo pago. É o recurso com o "efeito uau" mais imediato.
+- **Assistentes mais contextuais:** o Gemini e equivalentes entendem o que está na sua tela e agem sobre isso — perguntar sobre um vídeo, criar um evento a partir de um print, buscar algo circulando na tela.
+- **Transcrição e resumo de áudios:** gravações de reuniões, aulas e até os áudios intermináveis do WhatsApp viram texto pesquisável, com resumo dos pontos principais. Ganho de tempo real para estudantes e profissionais.
 
 **O que NÃO muda (ainda):** nem todo recurso funciona em português do Brasil desde o primeiro dia — vários chegam primeiro em inglês e vêm sendo liberados gradualmente por aqui. Alguns dependem da nuvem, e os pacotes completos ficam restritos a aparelhos mais caros. Atenção ao asterisco: fabricantes já sinalizaram que parte dos recursos de IA pode se tornar paga no futuro, embora o essencial siga gratuito nos aparelhos compatíveis.
 
@@ -32,7 +32,7 @@ Cortando o marketing, é isso que a IA embarcada já entrega no uso real em 2026
 
 A resposta honesta do TecnoPulso: **depende de onde você está partindo** — e, na maioria dos casos, a IA sozinha ainda não justifica a troca.
 
-**Para quem vale a pena:** se o seu celular tem três anos ou mais e você já estava planejando trocar, faz todo sentido escolher um modelo com pacote de IA completo — os fabricantes concentram as novidades de software nos aparelhos compatíveis. Também vale para quem tem uso profissional direto dos recursos: quem atende clientes de outros países (tradução de chamadas), grava muitas reuniões (transcrição) ou produz conteúdo (edição de fotos) sente o benefício no primeiro dia.
+**Para quem vale a pena:** se o seu celular tem três anos ou mais e você já planejava trocar, faz todo sentido escolher um modelo com pacote de IA completo — os fabricantes concentram as novidades de software nos aparelhos compatíveis. Também vale para quem tem uso profissional direto: quem atende clientes de outros países, grava muitas reuniões ou produz conteúdo sente o benefício no primeiro dia.
 
 **Para quem não vale a pena:** se o seu celular tem um ou dois anos e funciona bem, trocar agora só por causa da IA é queimar dinheiro. Boa parte dos recursos mais úteis — resumos, assistente Gemini, transcrição — funciona razoavelmente bem via aplicativos gratuitos em qualquer Android ou iPhone recente. Além disso, vários recursos anunciados nos lançamentos vêm sendo liberados gradualmente: quem compra no hype às vezes espera meses para usar o que viu na propaganda.
 
@@ -52,7 +52,7 @@ O Galaxy S24 inaugurou o Galaxy AI e segue sendo uma das portas de entrada mais 
 
 ### iPhone 15 — porta de entrada para a Apple Intelligence
 
-Para quem está no ecossistema Apple, a linha iPhone 15 é o caminho de entrada mais acessível rumo à Apple Intelligence — com uma ressalva que os anúncios não destacam: dentro da linha, os recursos completos de IA se concentram nos modelos **Pro**, de chip mais potente. O iPhone 15 "comum" segue sendo um excelente aparelho com anos de atualização pela frente, mas quem faz questão da Apple Intelligence completa deve mirar o 15 Pro ou gerações mais novas. No Mercado Livre, compre apenas de lojas oficiais ou vendedores com reputação impecável. Faixa de preço: R$ 3.500–5.000 no Mercado Livre.
+Para quem está no ecossistema Apple, a linha iPhone 15 é o caminho de entrada mais acessível rumo à Apple Intelligence — com uma ressalva que os anúncios não destacam: os recursos completos de IA se concentram nos modelos **Pro**, de chip mais potente. O iPhone 15 "comum" segue sendo excelente, com anos de atualização pela frente, mas quem faz questão da Apple Intelligence completa deve mirar o 15 Pro ou gerações mais novas. Compre apenas de lojas oficiais ou vendedores com reputação impecável. Faixa de preço: R$ 3.500–5.000 no Mercado Livre.
 
 **Ideal para:** usuários de iPhone que querem se aproximar da Apple Intelligence sem pagar o preço dos modelos mais recentes.
 
@@ -96,7 +96,7 @@ Os recursos essenciais são gratuitos nos aparelhos compatíveis. Porém, fabric
 
 A IA embarcada é a evolução mais interessante dos smartphones nos últimos anos — mas ela premia o consumidor paciente. Se o seu aparelho ainda dá conta, espere: os recursos vêm sendo liberados gradualmente e ficam melhores (e mais baratos) a cada geração. Se a hora de trocar chegou, escolha com inteligência: **Galaxy S24** para o pacote Android mais completo, **iPhone 15** (de olho nos modelos Pro) para quem vive no ecossistema Apple e **Motorola Edge 50** para IA com o melhor custo-benefício.
 
-Ficou de olho em algum deles? Toque no cartão do produto correspondente acima e confira a oferta atual no Mercado Livre — os preços dessa categoria mudam toda semana, e o modelo do ano anterior em promoção costuma ser a compra mais esperta. Se este artigo te ajudou a cortar o hype, compartilhe com aquele amigo que quer trocar de celular "por causa da IA" sem saber o porquê.
+Ficou de olho em algum deles? Toque no cartão do produto correspondente acima e confira a oferta atual no Mercado Livre — os preços mudam toda semana, e o modelo do ano anterior em promoção costuma ser a compra mais esperta. Se este artigo te ajudou a cortar o hype, compartilhe com aquele amigo que quer trocar de celular "por causa da IA" sem saber o porquê.
 
 ## Bloco de SEO
 
