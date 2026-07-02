@@ -31,7 +31,8 @@ affiliate-blog-loop/
 │   ├── mercado-livre-afiliados.md                # Painel, links, comissões, fluxo no WordPress
 │   ├── seo-cauda-longa.md                        # Intenções de busca e fórmulas de cauda longa
 │   ├── design-do-blog.md                         # Layout e design impecável no WordPress
-│   └── naming-e-branding.md                      # Rebranding: ahebeler.shop → TecnoPulso
+│   ├── naming-e-branding.md                      # Rebranding: ahebeler.shop → TecnoPulso
+│   └── google-adsense.md                         # Ativação e aprovação do Google AdSense
 ├── assets/
 │   ├── template-artigo-top10.md                  # Template de listicle Top 10
 │   ├── template-comparativo.md                   # Template de comparativo X vs Y
@@ -40,7 +41,8 @@ affiliate-blog-loop/
 │   ├── checklist-publicacao-wordpress.md         # Checklist operacional de publicação
 │   ├── estilo-tecnopulso.css                     # CSS do blog v1 — tema claro
 │   ├── estilo-tecnopulso-dark.css                # CSS do blog v2 — dark futurista (recomendado)
-│   └── home-tecnopulso.html                      # Página inicial futurista (blocos Gutenberg)
+│   ├── home-tecnopulso.html                      # Página inicial futurista (blocos Gutenberg)
+│   └── pauta-tecnopulso.md                       # Briefing anexável: da pauta ao artigo no ar
 └── examples/
     ├── top-10-fones-bluetooth-mercado-livre-2026.md   # Exemplo pronto: Top 10
     ├── top-10-smartwatches-mercado-livre-2026.md      # Exemplo pronto: Top 10 (smartwatches)
