@@ -114,7 +114,7 @@ Escolha (ou confirme) o tipo antes de escrever. Cada tipo tem estrutura própria
 ### 1. Top 10 / Lista (listicle)
 
 **Quando usar:** categoria ampla com muitas opções ("melhores fones de ouvido 2026", "top 10 celulares até R$ 2.000").
-**Template:** [assets/template-top10.md](assets/template-top10.md)
+**Template:** [assets/template-artigo-top10.md](assets/template-artigo-top10.md)
 **Alvo:** 1.800–2.500 palavras.
 
 Estrutura:
@@ -223,10 +223,10 @@ Gera o esqueleto do artigo (H1, H2s, tabela, marcadores de afiliado posicionados
 python3 scripts/article_scaffolder.py
 
 # Esqueleto de Top 10 para fones de ouvido
-python3 scripts/article_scaffolder.py --tipo top10 --tema "fones de ouvido bluetooth custo benefício" --nicho fones
+python3 scripts/article_scaffolder.py --tipo top10 --tema "Os 10 Melhores Fones de Ouvido Bluetooth do Mercado Livre" --produtos 10
 
 # Comparativo, saída JSON para automação
-python3 scripts/article_scaffolder.py --tipo comparativo --tema "Galaxy Watch vs Amazfit" --nicho smartwatches --json
+python3 scripts/article_scaffolder.py --tipo comparativo --tema "Galaxy Watch vs Amazfit" --json
 ```
 
 Preencha o esqueleto seguindo o Passo 1 — o scaffolder posiciona os marcadores do Passo 2 automaticamente.
@@ -239,11 +239,11 @@ Gera candidatas de palavra-chave de cauda longa para o Bloco de SEO combinando p
 # Modo demo (sem argumentos)
 python3 scripts/seo_keyword_builder.py
 
-# Candidatas para um tema específico
-python3 scripts/seo_keyword_builder.py --tema "smartwatch barato" --nicho smartwatches
+# Candidatas para um produto específico
+python3 scripts/seo_keyword_builder.py --produto "smartwatch barato" --categoria smartwatches
 
 # Saída JSON
-python3 scripts/seo_keyword_builder.py --tema "fone com cancelamento de ruído" --nicho fones --json
+python3 scripts/seo_keyword_builder.py --produto "fone com cancelamento de ruído" --categoria fones --json
 ```
 
 **Regra de curadoria:** a ferramenta gera candidatas; você seleciona e ajusta manualmente as 10-15 que o artigo realmente responde. Nunca cole a saída bruta no Bloco de SEO.
@@ -256,16 +256,16 @@ Leia sob demanda — não carregue tudo de uma vez.
 
 | Arquivo | Conteúdo |
 |---|---|
-| [references/programa-afiliados-mercado-livre.md](references/programa-afiliados-mercado-livre.md) | Como funciona o Programa de Afiliados do Mercado Livre: painel, geração de links, comissões, regras do programa |
-| [references/seo-cauda-longa-brasil.md](references/seo-cauda-longa-brasil.md) | Padrões de busca do consumidor brasileiro de tecnologia e construção de palavras-chave de cauda longa |
-| [references/copywriting-review-tech.md](references/copywriting-review-tech.md) | Frameworks de copy persuasiva para reviews e listas: especificação → benefício, frases de decisão, gatilhos éticos |
-| [references/transparencia-e-compliance.md](references/transparencia-e-compliance.md) | Obrigações de transparência de afiliado (CDC, CONAR), textos de aviso prontos e o que nunca prometer |
+| [references/mercado-livre-afiliados.md](references/mercado-livre-afiliados.md) | Programa de Afiliados do Mercado Livre: painel Afiliados e Criadores, geração de links, comissões, fluxo com plugin no WordPress, transparência e o que nunca fazer |
+| [references/seo-cauda-longa.md](references/seo-cauda-longa.md) | SEO de cauda longa para reviews tech no Brasil: intenções de busca, fórmulas de palavra-chave, Bloco de SEO, FAQ para featured snippets |
+| [references/design-do-blog.md](references/design-do-blog.md) | Layout e design impecável no WordPress: tema, tipografia, cartões de produto, tabelas responsivas, Core Web Vitals, elementos de confiança |
+| [references/naming-e-branding.md](references/naming-e-branding.md) | Rebranding do blog (ahebeler.shop → TecnoPulso): critérios de nome, alternativas, identidade e checklist de migração |
 
 ---
 
 ## Publicação no WordPress (handoff manual)
 
-A skill entrega o artigo pronto em Markdown; a publicação é manual. Checklist condensado do operador:
+A skill entrega o artigo pronto em Markdown; a publicação é manual. O checklist completo com checkboxes está em [assets/checklist-publicacao-wordpress.md](assets/checklist-publicacao-wordpress.md). Versão condensada:
 
 1. **Preparar o WordPress (uma vez):** instalar um tema profissional de revista/notícias (ex: **News Crunch**) e um plugin de cartões de afiliado (ex: **Hostinger Affiliate Marketing** ou equivalente que renderize cartões de produto).
 2. **Criar o post:** colar o artigo, conferir títulos, tabela e FAQ; preencher título SEO (≤60) e meta description (≤155) no plugin de SEO.

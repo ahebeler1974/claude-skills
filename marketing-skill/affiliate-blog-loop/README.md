@@ -27,15 +27,20 @@ affiliate-blog-loop/
 │   ├── article_scaffolder.py                     # Gera esqueleto do artigo por tipo
 │   └── seo_keyword_builder.py                    # Gera candidatas de cauda longa p/ Bloco de SEO
 ├── references/
-│   ├── programa-afiliados-mercado-livre.md       # Painel, links, comissões, regras do programa
-│   ├── seo-cauda-longa-brasil.md                 # Padrões de busca do consumidor brasileiro
-│   ├── copywriting-review-tech.md                # Copy persuasiva para reviews e listas
-│   └── transparencia-e-compliance.md             # Obrigações de transparência (CDC, CONAR)
-└── assets/
-    ├── template-top10.md                         # Template de listicle Top 10
-    ├── template-comparativo.md                   # Template de comparativo X vs Y
-    ├── template-noticia-ia.md                    # Template de notícia de IA
-    └── template-review.md                        # Template de review individual
+│   ├── mercado-livre-afiliados.md                # Painel, links, comissões, fluxo no WordPress
+│   ├── seo-cauda-longa.md                        # Intenções de busca e fórmulas de cauda longa
+│   ├── design-do-blog.md                         # Layout e design impecável no WordPress
+│   └── naming-e-branding.md                      # Rebranding: ahebeler.shop → TecnoPulso
+├── assets/
+│   ├── template-artigo-top10.md                  # Template de listicle Top 10
+│   ├── template-comparativo.md                   # Template de comparativo X vs Y
+│   ├── template-noticia-ia.md                    # Template de notícia de IA
+│   ├── template-review.md                        # Template de review individual
+│   └── checklist-publicacao-wordpress.md         # Checklist operacional de publicação
+└── examples/
+    ├── top-10-fones-bluetooth-mercado-livre-2026.md   # Exemplo pronto: Top 10
+    ├── comparativo-galaxy-s24-vs-iphone-15.md         # Exemplo pronto: comparativo
+    └── noticia-ia-celulares-2026.md                   # Exemplo pronto: notícia de IA
 ```
 
 ## Início rápido (3 passos)
@@ -48,7 +53,7 @@ Os scripts rodam sem instalação (Python 3, biblioteca padrão):
 
 ```bash
 python3 scripts/article_scaffolder.py            # modo demo
-python3 scripts/seo_keyword_builder.py --tema "smartwatch barato" --nicho smartwatches
+python3 scripts/seo_keyword_builder.py --produto "smartwatch barato" --categoria smartwatches
 ```
 
 ## Exemplo de uma iteração do loop
@@ -63,6 +68,16 @@ python3 scripts/seo_keyword_builder.py --tema "smartwatch barato" --nicho smartw
 5. Termina com: **"Artigo finalizado! Qual será o próximo equipamento, comparativo ou notícia de IA que vamos analisar?"**
 
 **Você:** responde com a próxima pauta — e o loop recomeça.
+
+## Exemplos prontos para publicar
+
+Três artigos completos — um por formato — demonstram o resultado esperado do loop:
+
+- **Top 10:** [Os 10 Melhores Fones de Ouvido Bluetooth do Mercado Livre em 2026](examples/top-10-fones-bluetooth-mercado-livre-2026.md)
+- **Comparativo:** [Galaxy S24 vs iPhone 15: qual vale mais a pena em 2026?](examples/comparativo-galaxy-s24-vs-iphone-15.md)
+- **Notícia de IA:** [IA no celular em 2026: Galaxy AI, Apple Intelligence e Gemini na prática](examples/noticia-ia-celulares-2026.md)
+
+Cada um já traz título SEO, meta description, aviso de transparência, marcadores de afiliado e Bloco de SEO — basta plugar os cartões do Mercado Livre e publicar.
 
 ## Documentação completa
 
