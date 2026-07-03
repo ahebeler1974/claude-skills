@@ -470,7 +470,20 @@ var VOZ={
     var self=this;
     function achar(){
       var vs=speechSynthesis.getVoices();
-      self.vozPt=vs.filter(function(v){return v.lang&&v.lang.toLowerCase().indexOf('pt')===0})[0]||null;
+      /* escolhe a voz mais "fofa" disponível: pt-BR > pt, feminina/natural > padrão */
+      var melhor=null,melhorNota=-1;
+      vs.forEach(function(v){
+        if(!v.lang)return;
+        var lang=v.lang.toLowerCase().replace('_','-');
+        if(lang.indexOf('pt')!==0)return;
+        var nome=(v.name||'').toLowerCase(),nota=1;
+        if(lang==='pt-br')nota+=4;
+        ['luciana','francisca','camila','maria','fernanda','vitoria','vitória','thalita','yara','female','feminin','mulher'].forEach(function(f){if(nome.indexOf(f)>=0)nota+=3});
+        if(nome.indexOf('google')>=0)nota+=2;
+        if(nome.indexOf('natural')>=0||nome.indexOf('neural')>=0||nome.indexOf('online')>=0)nota+=2;
+        if(nota>melhorNota){melhorNota=nota;melhor=v;}
+      });
+      self.vozPt=melhor;
       self.pronta=true;
     }
     achar();
@@ -483,7 +496,7 @@ var VOZ={
     try{
       if(!opts.empilhar)speechSynthesis.cancel();
       var u=new SpeechSynthesisUtterance(texto);
-      u.lang='pt-BR';u.rate=opts.rate||.95;u.pitch=opts.pitch||1.3;u.volume=1;
+      u.lang='pt-BR';u.rate=opts.rate||.88;u.pitch=opts.pitch||1.5;u.volume=1;
       if(this.vozPt)u.voice=this.vozPt;
       speechSynthesis.speak(u);
     }catch(e){}
@@ -526,7 +539,7 @@ function brilhoEm(x,y,simbolo){
   document.body.appendChild(b);
   setTimeout(function(){b.remove()},850);
 }
-var FRASES_FESTA=['Muito bem!','Uau, você conseguiu!','Que incrível!','Parabéns!','Você é demais!','Iupiii!'];
+var FRASES_FESTA=['Muito bem! Você conseguiu!','Uau! Isso mesmo!','Que capricho! Parabéns!','Você aprendeu direitinho!','Iupiii! Você é demais!','Olha só que lindo!'];
 function celebrar(msg){
   var faixa=$('#faixa-parabens');
   faixa.textContent=msg||FRASES_FESTA[Math.floor(Math.random()*FRASES_FESTA.length)];
@@ -729,7 +742,7 @@ function pgCapa(el){
   });
   $('#btn-comecar').addEventListener('click',function(){
     [0,1,2,4].forEach(function(n,i){AE.nota(n,{when:i*.09,dur:.4})});
-    VOZ.falar('Oi! Eu sou o Pipo! Vamos brincar?');
+    VOZ.falar('Oba! Vamos brincar! Segue comigo!');
     setTimeout(function(){irPara(1)},700);
   });
 }
@@ -742,9 +755,9 @@ function pgOvos(el){
     +'<div id="area-ovos"></div>';
   var area=$('#area-ovos');
   var surpresas=[
-    {tipo:'estrela',som:function(){AE.sucesso()},fala:'Uma estrela brilhante!'},
-    {tipo:'lila',som:function(){AE.piu()},fala:'É a Lila, a amiga do Pipo!'},
-    {tipo:'pipo',som:function(){AE.piu();setTimeout(function(){AE.piu()},350)},fala:'Achou! É o Pipo!'}
+    {tipo:'estrela',som:function(){AE.sucesso()},fala:'Olha só! Uma estrela brilhante! Ela caiu do céu!'},
+    {tipo:'lila',som:function(){AE.piu()},fala:'É a Lila, a minha melhor amiga! Diga oi para a Lila!'},
+    {tipo:'pipo',som:function(){AE.piu();setTimeout(function(){AE.piu()},350)},fala:'Achou! Sou eu, o Pipo! Piu piu!'}
   ];
   /* embaralha as surpresas */
   surpresas.sort(function(){return Math.random()-.5});
@@ -815,7 +828,7 @@ function pgPintar(el){
     +'</svg></div>'
     +'<div class="balao" id="dica-pintar" style="visibility:hidden">Cada bolinha toca uma música! 🎵</div>';
   var pintadas={};
-  var nomesCores=['vermelho','azul','verde','laranja','rosa','roxo'];
+  var nomesCores=['Vermelho! Que cor linda!','Azul, como o céu!','Verde, como as folhas!','Laranja, como o meu bico!','Rosa! Que fofo!','Roxo! Uau!'];
   $$('#pipo-pintar .dot-pintavel').forEach(function(dot){
     dot.addEventListener('pointerdown',function(ev){
       var i=+dot.dataset.i;
@@ -851,11 +864,11 @@ function pgPiano(el){
     +'<div class="balao">Toque nos bichinhos para ouvir a música deles!</div>'
     +'<div id="piano"></div>';
   var bichos=[
-    {nome:'vaca',rotulo:'Muu!',svg:svgVaca(),cor:'#ff9de2'},
-    {nome:'gato',rotulo:'Miau!',svg:svgGato(),cor:'#ffb347'},
-    {nome:'cachorro',rotulo:'Au au!',svg:svgCachorro(),cor:'#7ee081'},
-    {nome:'pato',rotulo:'Quá quá!',svg:svgPato(),cor:'#4dc9ff'},
-    {nome:'pipo',rotulo:'Piu piu!',svg:svgPintinho(),cor:'#ffd23f'}
+    {nome:'vaca',rotulo:'Muu!',fala:'A vaca faz muu!',svg:svgVaca(),cor:'#ff9de2'},
+    {nome:'gato',rotulo:'Miau!',fala:'O gato faz miau!',svg:svgGato(),cor:'#ffb347'},
+    {nome:'cachorro',rotulo:'Au au!',fala:'O cachorro faz au au!',svg:svgCachorro(),cor:'#7ee081'},
+    {nome:'pato',rotulo:'Quá quá!',fala:'O pato faz quá quá!',svg:svgPato(),cor:'#4dc9ff'},
+    {nome:'pipo',rotulo:'Piu piu!',fala:'E eu faço piu piu!',svg:svgPintinho(),cor:'#ffd23f'}
   ];
   var piano=$('#piano'),tocados={};
   bichos.forEach(function(b,i){
@@ -868,7 +881,7 @@ function pgPiano(el){
     tecla.addEventListener('pointerdown',function(){
       tecla.classList.add('tocando');
       AE.bicho(b.nome);
-      VOZ.falar(b.rotulo);
+      VOZ.falar(b.fala);
       setTimeout(function(){tecla.classList.remove('tocando')},450);
       if(!tocados[b.nome]){
         tocados[b.nome]=true;
@@ -1029,7 +1042,7 @@ function pgContar(el){
         brilhoEm(ev.clientX,ev.clientY);
         if(contados===poses.length){
           timers.push(setTimeout(function(){
-            VOZ.falar('São '+NUM[poses.length-1]+' pintinhos! Muito bem!');
+            VOZ.falar('São '+NUM[poses.length-1]+' pintinhos! Você contou tudo certinho!');
             AE.sucesso();
             rodada++;
             if(rodada<rodadas.length){
@@ -1101,7 +1114,7 @@ function pgFormas(el){
       var r=peca.getBoundingClientRect();
       origem={dx:ev.clientX-r.left,dy:ev.clientY-r.top,left:peca.style.left,top:peca.style.top};
       AE.toque();
-      VOZ.falar(f.nome+'!');
+      VOZ.falar('Este é o '+f.nome.toLowerCase()+'! Leve até a casinha dele!');
     });
     peca.addEventListener('pointermove',function(ev){
       if(!origem||peca.dataset.travada)return;
@@ -1124,7 +1137,7 @@ function pgFormas(el){
         slot.classList.add('cheio');
         AE.nota(encaixadas*2,{dur:.5});
         AE.pop();
-        VOZ.falar('Encaixou!');
+        VOZ.falar('Encaixou! Isso mesmo!');
         encaixadas++;
         if(encaixadas===3)setTimeout(function(){ganharEstrela('formas','Todas as formas na casinha!')},500);
       }else{
@@ -1315,16 +1328,16 @@ function pgDiploma(el){
    NAVEGAÇÃO E INICIALIZAÇÃO
    ============================================================ */
 var PAGINAS=[
-  {id:'capa',build:pgCapa,fala:'Oi! Eu sou o Pipo! Toque no botão amarelo para começar!'},
-  {id:'ovos',build:pgOvos,fala:'Cadê o Pipo? Toque nos ovos para descobrir!'},
-  {id:'pintar',build:pgPintar,fala:'Vamos pintar as bolinhas do Pipo? Toque nas bolinhas cinzas!'},
-  {id:'piano',build:pgPiano,fala:'Toque nos bichinhos para fazer música!'},
-  {id:'circular',build:pgCircular,fala:'Desenhe um círculo em volta do gato! O gato faz miau!'},
-  {id:'contar',build:pgContar,fala:'Vamos contar os pintinhos? Toque neles, um por um!'},
-  {id:'formas',build:pgFormas,fala:'Arraste cada forma para a casinha certa!'},
-  {id:'musica',build:pgMusica,fala:'Hora de cantar! Toque no botão verde para ouvir a música do Pipo!'},
-  {id:'desenhar',build:pgEstrelas,fala:'Desenhe com o dedo! Cada traço faz música!'},
-  {id:'diploma',build:pgDiploma,fala:'Você chegou ao final! Hora do diploma!'}
+  {id:'capa',build:pgCapa,fala:'Oi, amiguinho! Eu sou o Pipo, o pintinho pintado! Toque no botão amarelo bem grande para a gente brincar juntos!'},
+  {id:'ovos',build:pgOvos,fala:'Olha! Três ovos! Tem surpresa dentro de cada um. Toque num ovo para descobrir quem mora ali!'},
+  {id:'pintar',build:pgPintar,fala:'Vamos pintar juntos? Toque numa bolinha cinza e veja a cor bonita aparecer! Cada cor faz uma musiquinha!'},
+  {id:'piano',build:pgPiano,fala:'Este é o piano dos bichos! Toque num bichinho para ouvir o som que ele faz. Depois, imite junto comigo!'},
+  {id:'circular',build:pgCircular,fala:'Escute bem: o gato faz miau, miau! Agora desenhe uma bolinha em volta do gato com o seu dedo!'},
+  {id:'contar',build:pgContar,fala:'Vamos contar juntos? Toque em cada pintinho, um de cada vez, e conte comigo: um, dois, três!'},
+  {id:'formas',build:pgFormas,fala:'Olhe as casinhas tracejadas lá em cima! Segure uma forma com o dedo e leve até a casinha igualzinha a ela!'},
+  {id:'musica',build:pgMusica,fala:'Hora de cantar! Toque no botão verde e cante bem alto comigo. A letra vai acender, olha só!'},
+  {id:'desenhar',build:pgEstrelas,fala:'Agora é a sua vez de criar! Passe o dedo na tela e veja a mágica: o seu desenho vira arco-íris e faz música!'},
+  {id:'diploma',build:pgDiploma,fala:'Uau, você chegou até o final! Peça para o papai ou a mamãe escrever o seu nome, porque você vai ganhar um diploma!'}
 ];
 var limpezaAtual=null,falaTimer=null;
 
