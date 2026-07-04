@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#101d5e">
+<meta name="description" content="O Livro Mágico do Pipo — ebook interativo com sons, músicas e atividades para crianças de 2 a 6 anos. Funciona offline, sem instalar nada.">
+<meta property="og:title" content="Pipo, o Pintinho Pintado — O Livro Mágico Interativo">
+<meta property="og:description" content="Toque, cante, pinte e descubra! 10 páginas mágicas com som e atividades para crianças de 2 a 6 anos.">
+<title>Pipo, o Pintinho Pintado — O Livro Mágico Interativo</title>
+<style>
+/* ============================================================
+   PIPO, O PINTINHO PINTADO — O LIVRO MÁGICO INTERATIVO
+   Ebook interativo para crianças de 2 a 6 anos.
+   Arquivo único: funciona offline, sem instalar nada.
+   ============================================================ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --azul-fundo1:#0d1856;
+  --azul-fundo2:#1c2f8f;
+  --amarelo:#ffd23f;
+  --laranja:#ff9430;
+  --vermelho:#ff5f5f;
+  --azul-claro:#4dc9ff;
+  --verde:#7ee081;
+  --rosa:#ff9de2;
+  --roxo:#b39dff;
+  --branco:#ffffff;
+  --sombra:0 6px 0 rgba(0,0,0,.25);
+  --fonte:'Arial Rounded MT Bold','Baloo 2',ui-rounded,'Comic Sans MS','Segoe UI',system-ui,sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:var(--fonte);
+  background:radial-gradient(120% 90% at 50% 0%,var(--azul-fundo2) 0%,var(--azul-fundo1) 62%,#0a1140 100%);
+  color:#fff;
+  user-select:none;-webkit-user-select:none;
+  touch-action:manipulation;
+  display:flex;flex-direction:column;
+  position:fixed;inset:0;
+}
+
+/* ---------- céu estrelado ---------- */
+#ceu{position:fixed;inset:0;pointer-events:none;z-index:0}
+.estrela-bg{
+  position:absolute;background:#fff;border-radius:50%;
+  animation:piscar var(--dur,3s) ease-in-out var(--del,0s) infinite;
+  box-shadow:0 0 6px rgba(255,255,255,.8);
+}
+@keyframes piscar{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.95;transform:scale(1.15)}}
+.lua{
+  position:absolute;top:11%;right:7%;width:56px;height:56px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#fff8dc,#ffe9a8 60%,#f3d67c);
+  box-shadow:0 0 34px rgba(255,236,170,.45);opacity:.9;
+}
+
+/* ---------- HUD (topo) ---------- */
+#hud{
+  position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 6px;gap:8px;
+}
+.hud-btn{
+  border:0;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.14);color:#fff;
+  border:2px solid rgba(255,255,255,.35);
+  min-width:52px;height:46px;border-radius:23px;
+  font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:0 14px;backdrop-filter:blur(2px);
+  transition:transform .12s;
+}
+.hud-btn:active{transform:scale(.92)}
+#estrelas-hud{font-size:19px;letter-spacing:1px}
+#estrelas-hud b{color:var(--amarelo)}
+#btn-pais{position:relative;overflow:hidden;font-size:13px}
+#btn-pais .anel{
+  position:absolute;inset:0;background:conic-gradient(var(--amarelo) calc(var(--p,0)*1%),transparent 0);
+  opacity:.55;pointer-events:none;
+}
+#btn-pais span{position:relative}
+
+/* ---------- palco ---------- */
+#palco{
+  position:relative;z-index:10;flex:1;display:flex;align-items:center;justify-content:center;
+  padding:4px 10px;min-height:0;
+}
+.pagina{
+  width:100%;max-width:720px;height:100%;max-height:760px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  animation:entrar .45s cubic-bezier(.34,1.4,.5,1);position:relative;
+}
+@keyframes entrar{from{opacity:0;transform:translateY(26px) scale(.96)}to{opacity:1;transform:none}}
+.saindo{animation:sair .22s ease-in forwards}
+@keyframes sair{to{opacity:0;transform:translateY(-18px) scale(.97)}}
+
+.titulo-pag{
+  font-size:clamp(20px,5.6vw,34px);text-align:center;line-height:1.15;
+  text-shadow:0 3px 0 rgba(0,0,0,.3);
+}
+.balao{
+  background:#fff;color:#1c2a6e;border-radius:18px;padding:9px 16px;
+  font-size:clamp(14px,3.9vw,19px);font-weight:bold;text-align:center;max-width:92%;
+  box-shadow:var(--sombra);position:relative;line-height:1.25;
+}
+.balao::after{
+  content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  border:10px solid transparent;border-bottom-color:#fff;border-top:0;
+}
+
+/* ---------- navegação ---------- */
+#nav{
+  position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;
+  padding:6px 12px calc(env(safe-area-inset-bottom,0px) + 12px);gap:10px;
+}
+.seta{
+  border:0;cursor:pointer;font-family:inherit;
+  width:78px;height:64px;border-radius:26px;font-size:34px;color:#5d3d00;
+  background:linear-gradient(#ffe27a,var(--amarelo));
+  box-shadow:var(--sombra);display:flex;align-items:center;justify-content:center;
+  transition:transform .12s;font-weight:bold;
+}
+.seta:active{transform:scale(.9)}
+.seta[disabled]{opacity:.25;pointer-events:none}
+.seta.pulsa{animation:pulsar 1.2s ease-in-out infinite}
+@keyframes pulsar{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+#bolinhas-nav{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:46vw}
+.bolinha-nav{
+  width:13px;height:13px;border-radius:50%;background:rgba(255,255,255,.28);
+  border:2px solid rgba(255,255,255,.4);transition:all .25s;
+}
+.bolinha-nav.ativa{background:var(--amarelo);transform:scale(1.3);border-color:#fff}
+.bolinha-nav.feita{background:var(--verde)}
+
+/* ---------- botões grandes ---------- */
+.btn-magico{
+  border:0;cursor:pointer;font-family:inherit;font-weight:bold;
+  font-size:clamp(20px,5.5vw,30px);color:#5d3d00;
+  background:linear-gradient(#ffe27a,var(--amarelo));
+  padding:18px 42px;border-radius:40px;box-shadow:0 8px 0 #c9962a,0 12px 24px rgba(0,0,0,.35);
+  transition:transform .12s;animation:pulsar 1.6s ease-in-out infinite;
+}
+.btn-magico:active{transform:scale(.93) translateY(4px);box-shadow:0 3px 0 #c9962a}
+.btn-verde{background:linear-gradient(#a8f0ad,var(--verde));color:#0c4d18;box-shadow:0 8px 0 #3f9c4b,0 12px 24px rgba(0,0,0,.35)}
+.btn-verde:active{box-shadow:0 3px 0 #3f9c4b}
+.btn-mini{
+  border:0;cursor:pointer;font-family:inherit;font-weight:bold;
+  background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.4);color:#fff;
+  font-size:15px;padding:9px 18px;border-radius:22px;transition:transform .12s;
+}
+.btn-mini:active{transform:scale(.92)}
+
+/* ---------- personagem ---------- */
+.pipo-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.pipo{filter:drop-shadow(0 10px 14px rgba(0,0,0,.35));transition:transform .15s}
+.pipo.pulando{animation:pular .55s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pular{0%{transform:none}35%{transform:translateY(-34px) rotate(-5deg)}70%{transform:translateY(0) rotate(3deg)}100%{transform:none}}
+.pipo.dancando{animation:dancar .5s ease-in-out infinite}
+@keyframes dancar{0%,100%{transform:rotate(-6deg) translateY(0)}25%{transform:rotate(0) translateY(-12px)}50%{transform:rotate(6deg) translateY(0)}75%{transform:rotate(0) translateY(-12px)}}
+.flutuando{animation:flutuar 3s ease-in-out infinite}
+@keyframes flutuar{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* ---------- capa ---------- */
+.titulo-capa{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;max-width:96%}
+.titulo-capa .letra{
+  font-size:clamp(30px,9vw,58px);font-weight:bold;display:inline-block;
+  text-shadow:0 4px 0 rgba(0,0,0,.35);
+  animation:letra-pula 2.2s ease-in-out calc(var(--i)*.09s) infinite;
+}
+@keyframes letra-pula{0%,72%,100%{transform:translateY(0)}80%{transform:translateY(-12px) rotate(-4deg)}90%{transform:translateY(2px)}}
+.subtitulo-capa{font-size:clamp(15px,4.2vw,22px);opacity:.92;text-align:center;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+
+/* ---------- ovos ---------- */
+#area-ovos{display:flex;gap:clamp(8px,3vw,26px);align-items:flex-end;justify-content:center;flex-wrap:wrap}
+.ovo-slot{position:relative;width:clamp(96px,26vw,150px);height:clamp(120px,32vw,190px);cursor:pointer}
+.ovo-slot svg{width:100%;height:100%;overflow:visible}
+.ovo-inteiro{animation:balancar 1.6s ease-in-out calc(var(--i)*.35s) infinite;transform-origin:50% 90%}
+@keyframes balancar{0%,100%{transform:rotate(0)}20%{transform:rotate(-6deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+.surpresa{animation:surgir .5s cubic-bezier(.3,1.7,.5,1) forwards}
+@keyframes surgir{from{transform:translateY(30px) scale(.2);opacity:0}to{transform:none;opacity:1}}
+
+/* ---------- pintar bolinhas ---------- */
+.dot-pintavel{cursor:pointer;transition:transform .15s;transform-origin:center;transform-box:fill-box}
+.dot-pintavel:active{transform:scale(1.25)}
+.dot-vazia .dot-visivel{animation:convite 2s ease-in-out infinite}
+@keyframes convite{0%,100%{stroke-opacity:.9}50%{stroke-opacity:.3}}
+
+/* ---------- piano ---------- */
+#piano{display:flex;gap:clamp(6px,1.8vw,14px);align-items:stretch;justify-content:center;width:100%;max-width:640px;flex:0 1 auto;height:min(46vh,340px)}
+.tecla{
+  flex:1;border:0;cursor:pointer;border-radius:22px;position:relative;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:12px;gap:6px;
+  box-shadow:0 8px 0 rgba(0,0,0,.3);transition:transform .08s,box-shadow .08s;
+}
+.tecla:active,.tecla.tocando{transform:translateY(6px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.tecla svg{width:76%;max-width:96px}
+.tecla .nome-bicho{font-weight:bold;color:rgba(0,0,0,.55);font-size:clamp(12px,3vw,17px);font-family:inherit}
+.tecla.tocando svg{animation:pular .45s}
+
+/* ---------- circular / desenhar ---------- */
+.quadro{
+  touch-action:none;
+  position:relative;width:100%;max-width:640px;flex:1;min-height:0;
+  border-radius:26px;overflow:hidden;
+  background:rgba(255,255,255,.08);border:3px dashed rgba(255,255,255,.35);
+}
+.quadro canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.bicho-alvo{position:absolute;width:26%;max-width:130px;transition:transform .3s,filter .3s;cursor:pointer}
+.bicho-alvo svg{width:100%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+.bicho-alvo.achado{animation:festa-bicho .8s ease-in-out infinite}
+.bicho-alvo.dica{animation:pulsar 1.1s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(255,210,63,.95))}
+@keyframes festa-bicho{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.15) rotate(4deg)}}
+
+/* ---------- contar ---------- */
+#area-contar{position:relative;width:100%;max-width:640px;flex:1;min-height:0}
+.pintinho-contavel{
+  position:absolute;width:clamp(70px,19vw,110px);cursor:pointer;
+  transition:transform .2s;animation:flutuar 2.6s ease-in-out calc(var(--i)*.3s) infinite;
+}
+.pintinho-contavel svg{width:100%;filter:drop-shadow(0 6px 8px rgba(0,0,0,.3))}
+.pintinho-contavel.contado{animation:none;transform:scale(1.06)}
+.numero-flutuante{
+  position:absolute;font-size:clamp(40px,11vw,72px);font-weight:bold;color:var(--amarelo);
+  text-shadow:0 4px 0 rgba(0,0,0,.4);pointer-events:none;
+  animation:numero-sobe 1.1s cubic-bezier(.3,1.5,.5,1) forwards;z-index:5;
+}
+@keyframes numero-sobe{from{transform:translateY(10px) scale(.3);opacity:0}30%{opacity:1}to{transform:translateY(-46px) scale(1.15);opacity:0}}
+#numero-gigante{
+  font-size:clamp(60px,16vw,110px);font-weight:bold;color:var(--amarelo);
+  text-shadow:0 6px 0 rgba(0,0,0,.4);line-height:1;min-height:.9em;
+}
+
+/* ---------- formas ---------- */
+#area-formas{position:relative;width:100%;max-width:620px;flex:1;min-height:260px}
+.encaixe{
+  position:absolute;border:4px dashed rgba(255,255,255,.55);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .3s,border-color .3s;
+}
+.encaixe.cheio{border-style:solid;border-color:transparent}
+.forma-peca{
+  position:absolute;cursor:grab;touch-action:none;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.35));
+  transition:filter .2s;z-index:4;
+}
+.forma-peca.arrastando{cursor:grabbing;z-index:9;filter:drop-shadow(0 16px 18px rgba(0,0,0,.45)) brightness(1.1)}
+.forma-peca.travada{cursor:default;animation:encaixou .5s cubic-bezier(.3,1.7,.5,1)}
+@keyframes encaixou{0%{transform:scale(1.2)}60%{transform:scale(.94)}100%{transform:scale(1)}}
+
+/* ---------- música ---------- */
+#letra-musica{
+  display:flex;flex-direction:column;gap:8px;align-items:center;width:100%;max-width:600px;
+}
+.linha-letra{
+  font-size:clamp(16px,4.6vw,26px);font-weight:bold;text-align:center;
+  color:rgba(255,255,255,.45);transition:all .3s;line-height:1.3;
+}
+.linha-letra.cantando{
+  color:var(--amarelo);transform:scale(1.12);
+  text-shadow:0 0 18px rgba(255,210,63,.6),0 3px 0 rgba(0,0,0,.3);
+}
+.nota-voadora{
+  position:fixed;font-size:30px;pointer-events:none;z-index:30;
+  animation:nota-voa 2.2s ease-out forwards;
+}
+@keyframes nota-voa{from{transform:translateY(0) rotate(0);opacity:1}to{transform:translateY(-46vh) rotate(40deg);opacity:0}}
+
+/* ---------- estrelas / confete / recompensas ---------- */
+.confete{position:fixed;width:12px;height:12px;top:-20px;z-index:60;pointer-events:none;animation:confete-cai linear forwards}
+@keyframes confete-cai{to{transform:translateY(110vh) rotate(720deg)}}
+.estrela-premio{
+  position:fixed;font-size:34px;z-index:60;pointer-events:none;
+  animation:estrela-voa .9s cubic-bezier(.4,0,.7,1) forwards;
+}
+@keyframes estrela-voa{to{transform:translate(var(--dx),var(--dy)) scale(.5);opacity:.2}}
+.brilho{position:fixed;pointer-events:none;z-index:55;font-size:22px;animation:brilha .8s ease-out forwards}
+@keyframes brilha{from{transform:scale(.3);opacity:1}to{transform:scale(1.6) translateY(-24px);opacity:0}}
+.maozinha{
+  position:fixed;font-size:46px;z-index:26;pointer-events:none;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.5));
+  animation:mao-toca 1.15s ease-in-out infinite;
+}
+@keyframes mao-toca{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-16px) scale(1.18)}58%{transform:translateY(3px) scale(.94)}}
+#faixa-parabens{
+  position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.3);z-index:70;
+  background:linear-gradient(#ffe27a,var(--amarelo));color:#5d3d00;
+  font-size:clamp(24px,7vw,44px);font-weight:bold;padding:16px 38px;border-radius:50px;
+  box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;text-align:center;
+}
+#faixa-parabens.mostrando{animation:faixa 1.8s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes faixa{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}30%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(.9)}}
+
+/* ---------- diploma ---------- */
+#diploma{
+  background:linear-gradient(#fffdf4,#fff3cf);color:#4a3208;border-radius:26px;
+  padding:26px 22px;text-align:center;max-width:520px;width:94%;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);border:6px solid var(--amarelo);position:relative;
+}
+#diploma h2{font-size:clamp(22px,6vw,34px);color:#b3560c}
+#diploma .nome-diploma{font-size:clamp(26px,8vw,44px);color:#1c2a6e;margin:6px 0;word-break:break-word}
+#diploma p{font-size:clamp(13px,3.6vw,17px);line-height:1.45}
+#diploma .estrelas-diploma{font-size:clamp(20px,6vw,30px);letter-spacing:3px;margin:8px 0}
+.campo-nome{
+  font-family:inherit;font-size:clamp(18px,5vw,24px);font-weight:bold;text-align:center;
+  border:4px solid var(--amarelo);border-radius:20px;padding:12px 16px;width:min(86%,360px);
+  color:#1c2a6e;outline:none;background:#fff;
+}
+.campo-nome::placeholder{color:#9aa4d4;font-size:.75em}
+
+/* ---------- cantinho dos pais ---------- */
+#tela-pais{
+  position:fixed;inset:0;z-index:90;background:rgba(8,12,40,.92);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:18px;
+}
+#tela-pais.aberta{display:flex}
+.cartao-pais{
+  background:#fff;color:#25306b;border-radius:24px;padding:22px;max-width:440px;width:100%;
+  max-height:86vh;overflow:auto;font-size:15px;line-height:1.5;
+}
+.cartao-pais h2{margin-bottom:4px}
+.cartao-pais h3{margin:14px 0 4px;font-size:15px;color:#b3560c}
+.linha-config{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #e8ebf7}
+.chave{
+  min-width:64px;height:34px;border-radius:17px;border:0;cursor:pointer;font-family:inherit;font-weight:bold;
+  background:#cdd4ef;color:#4a5493;transition:all .2s;font-size:13px;
+}
+.chave.ligada{background:var(--verde);color:#0c4d18}
+.aviso-pais{font-size:12px;color:#7c86b8;margin-top:10px}
+
+/* ---------- impressão (diploma) ---------- */
+@media print{
+  body{position:static;background:#fff}
+  body *{visibility:hidden}
+  #diploma,#diploma *{visibility:visible}
+  #diploma{position:fixed;inset:auto;left:50%;top:40px;transform:translateX(-50%);box-shadow:none}
+}
+
+/* ---------- telas baixas ---------- */
+@media (max-height:600px){
+  .titulo-pag{font-size:clamp(16px,4.4vw,24px)}
+  .seta{width:64px;height:52px;font-size:26px}
+  .lua{width:44px;height:44px}
+}
+</style>
+</head>
+<body>
+<noscript><div style="position:fixed;inset:0;background:#101d5e;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;font-family:sans-serif;font-size:18px;z-index:999">Para a magia funcionar, abra este arquivo em um navegador com JavaScript ligado (Chrome, Safari ou Firefox). 🐤</div></noscript>
+<div id="ceu"><div class="lua"></div></div>
+
+<header id="hud">
+  <div class="hud-btn" id="estrelas-hud">⭐ <b id="conta-estrelas">0</b></div>
+  <div style="display:flex;gap:8px">
+    <button class="hud-btn" id="btn-som" aria-label="Ligar ou desligar o som">🔊</button>
+    <button class="hud-btn" id="btn-pais" aria-label="Cantinho dos pais — segure para abrir"><div class="anel"></div><span>👨‍👩‍👧<br>Pais</span></button>
+  </div>
+</header>
+
+<main id="palco"></main>
+
+<nav id="nav">
+  <button class="seta" id="seta-ant" aria-label="Página anterior">◀</button>
+  <div id="bolinhas-nav"></div>
+  <button class="seta" id="seta-prox" aria-label="Próxima página">▶</button>
+</nav>
+
+<div id="faixa-parabens"></div>
+
+<div id="tela-pais">
+  <div class="cartao-pais">
+    <h2>👨‍👩‍👧 Cantinho dos Pais</h2>
+    <p style="font-size:13px;color:#7c86b8">Bem-vindo! Este espaço é só para adultos.</p>
+    <div class="linha-config"><span>🔊 Sons e música</span><button class="chave ligada" id="cfg-som">LIGADO</button></div>
+    <div class="linha-config"><span>🗣️ Narração por voz <small style="color:#7c86b8">(usa a voz do aparelho — qualidade varia)</small></span><button class="chave" id="cfg-voz">DESLIGADO</button></div>
+    <div class="linha-config"><span>🐢 Voz mais devagar</span><button class="chave" id="cfg-voz-lenta">NORMAL</button></div>
+    <div class="linha-config"><span>⭐ Recomeçar do zero</span><button class="chave" id="cfg-reset">APAGAR</button></div>
+    <h3>💡 Como aproveitar melhor</h3>
+    <p>O Livro Mágico foi feito para ser usado <b>junto</b>: sente ao lado, nomeie as cores, cante, comemore. A ciência mostra que a tela vira aprendizado quando o adulto participa. Sessões curtas (10–15 min) funcionam melhor.</p>
+    <h3>🔒 Privacidade</h3>
+    <p>Nenhum dado sai deste aparelho. O nome usado no diploma e o progresso ficam salvos apenas aqui.</p>
+    <p class="aviso-pais">Pipo, o Pintinho Pintado — Livro Mágico Interativo v1.0 • Personagem, músicas e sons 100% originais.</p>
+    <div style="text-align:center;margin-top:14px">
+      <button class="btn-magico btn-verde" style="animation:none;font-size:18px;padding:12px 30px" id="cfg-fechar">Voltar para o Pipo ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ============================================================
+   NÚCLEO — estado, áudio, voz, recompensas
+   ============================================================ */
+var $=function(s,el){return (el||document).querySelector(s)};
+var $$=function(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))};
+
+/* ---------- estado persistente (só neste aparelho) ---------- */
+var S={pagina:0,estrelas:{},nome:'',som:true,voz:false,vozLenta:false};
+try{var salvo=localStorage.getItem('pipo-livro-v2');if(salvo){var o=JSON.parse(salvo);for(var k in o)S[k]=o[k];}}catch(e){}
+function salvar(){try{localStorage.setItem('pipo-livro-v2',JSON.stringify(S))}catch(e){}}
+function totalEstrelas(){var n=0;for(var k in S.estrelas)if(S.estrelas[k])n++;return n}
+
+/* ---------- áudios profissionais (voz natural e músicas geradas por IA) ----------
+   Os MP3s são embutidos aqui pelo script producao-audio/embutir-audios.py.
+   Sem áudio embutido, o livro usa os sons sintetizados como reserva. */
+var AUDIO={};
+/*__AUDIOS_EMBUTIDOS__*/
+var AUDIO_PLAYERS={};
+function tocarAudio(id,opts){
+  if(!S.som||!AUDIO[id])return false;
+  opts=opts||{};
+  try{
+    var a=AUDIO_PLAYERS[id]||(AUDIO_PLAYERS[id]=new Audio(AUDIO[id]));
+    a.loop=!!opts.loop;
+    a.volume=opts.vol!=null?opts.vol:1;
+    a.currentTime=0;
+    a.play();
+    return true;
+  }catch(e){return false}
+}
+function pararAudio(id){
+  var a=AUDIO_PLAYERS[id];
+  if(a){try{a.pause();a.currentTime=0}catch(e){}}
+}
+
+/* ---------- motor de áudio (Web Audio API — sons 100% sintetizados) ---------- */
+var AE={
+  ctx:null,master:null,
+  ensure:function(){
+    if(!this.ctx){
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC)return false;
+      this.ctx=new AC();
+      this.master=this.ctx.createGain();
+      this.master.gain.value=.55;
+      this.master.connect(this.ctx.destination);
+    }
+    if(this.ctx.state==='suspended')this.ctx.resume();
+    return true;
+  },
+  /* tom base estilo xilofone: seno + harmônico brilhante + decaimento */
+  tone:function(freq,opts){
+    if(!S.som||!this.ensure())return;
+    opts=opts||{};
+    var t=this.ctx.currentTime+(opts.when||0),dur=opts.dur||.4,vol=(opts.vol||1)*.9;
+    var osc=this.ctx.createOscillator(),g=this.ctx.createGain();
+    osc.type=opts.type||'sine';
+    osc.frequency.setValueAtTime(freq,t);
+    if(opts.sweep)osc.frequency.exponentialRampToValueAtTime(Math.max(30,opts.sweep),t+dur*.9);
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(vol*.5,t+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    osc.connect(g);g.connect(this.master);
+    osc.start(t);osc.stop(t+dur+.05);
+    if(!opts.seco){ /* harmônico de brilho (faz soar "mágico") */
+      var o2=this.ctx.createOscillator(),g2=this.ctx.createGain();
+      o2.type='sine';o2.frequency.setValueAtTime(freq*2.76,t);
+      g2.gain.setValueAtTime(0,t);
+      g2.gain.linearRampToValueAtTime(vol*.12,t+.008);
+      g2.gain.exponentialRampToValueAtTime(.0001,t+dur*.5);
+      o2.connect(g2);g2.connect(this.master);
+      o2.start(t);o2.stop(t+dur);
+    }
+  },
+  /* escala pentatônica de Dó — qualquer sequência soa bem */
+  penta:[523.25,587.33,659.25,783.99,880,1046.5,1174.66,1318.51],
+  nota:function(i,opts){this.tone(this.penta[((i%this.penta.length)+this.penta.length)%this.penta.length],opts)},
+  pop:function(){this.tone(880,{dur:.12,vol:.5,seco:true,sweep:1400})},
+  toque:function(){this.tone(659.25,{dur:.18,vol:.6})},
+  piu:function(){ /* o piu-piu do Pipo */
+    this.tone(1250,{dur:.14,vol:.55,sweep:1750,type:'triangle',seco:true});
+    this.tone(1350,{dur:.16,vol:.5,sweep:1850,type:'triangle',seco:true,when:.16});
+  },
+  sucesso:function(){var self=this;[0,2,4,5].forEach(function(n,i){self.nota(n,{when:i*.11,dur:.5,vol:.8})})},
+  fanfarra:function(){
+    var self=this,seq=[0,2,4,7,4,7];
+    seq.forEach(function(n,i){self.nota(n,{when:i*.13,dur:.55,vol:.9})});
+    [0,2,4].forEach(function(n){self.nota(n,{when:.85,dur:1.3,vol:.55})});
+    this.tone(1568,{when:.85,dur:1.2,vol:.45});
+  },
+  quase:function(){ /* erro gentil: duas notas descendo, macias */
+    this.tone(494,{dur:.25,vol:.35,type:'triangle'});
+    this.tone(392,{when:.22,dur:.35,vol:.3,type:'triangle'});
+  },
+  whoosh:function(){this.tone(300,{dur:.35,vol:.3,sweep:1200,type:'triangle',seco:true})},
+  bicho:function(nome){
+    if(!S.som||!this.ensure())return;
+    var t=this.ctx.currentTime,self=this;
+    if(nome==='vaca'){this.tone(180,{dur:.85,vol:.8,type:'sawtooth',sweep:95,seco:true});this.tone(90,{dur:.85,vol:.45,type:'sine',sweep:60,seco:true});}
+    else if(nome==='gato'){this.tone(620,{dur:.5,vol:.55,type:'sine',sweep:980,seco:true});this.tone(980,{when:.28,dur:.4,vol:.45,type:'sine',sweep:500,seco:true});}
+    else if(nome==='cachorro'){[0,.18].forEach(function(w){self.tone(300,{when:w,dur:.13,vol:.7,type:'square',sweep:160,seco:true})});}
+    else if(nome==='pato'){[0,.2].forEach(function(w){self.tone(280,{when:w,dur:.16,vol:.6,type:'sawtooth',sweep:200,seco:true})});}
+    else this.piu();
+  }
+};
+
+/* ---------- O TEMA DO PIPO: jingle instrumental que dá vida à capa ---------- */
+AE.tema={tocando:false,timer:null};
+AE.pararTema=function(){this.tema.tocando=false;if(this.tema.timer){clearTimeout(this.tema.timer);this.tema.timer=null;}pararAudio('tema');};
+AE.tocarTema=function(){
+  if(!S.som)return;
+  if(this.tema.tocando)return;
+  if(AUDIO['tema']&&tocarAudio('tema',{loop:true,vol:.85})){this.tema.tocando=true;return;}
+  if(!this.ensure())return;
+  this.tema.tocando=true;
+  var self=this;
+  (function loop(){
+    if(!self.tema.tocando||!S.som){self.tema.tocando=false;return;}
+    var B=60/112; /* 112 BPM — o andamento dos fenômenos infantis */
+    /* melodia principal (pentatônica, 16 tempos, alegre e grudenta) */
+    var mel=[
+      [4,0,.5],[4,.5,.5],[5,1,1],[4,2,.5],[3,2.5,.5],[2,3,1],
+      [3,4,.5],[3,4.5,.5],[4,5,1],[3,6,.5],[2,6.5,.5],[1,7,1],
+      [4,8,.5],[4,8.5,.5],[5,9,1],[7,10,.5],[5,10.5,.5],[4,11,1],
+      [3,12,.5],[4,12.5,.5],[2,13,.75],[1,13.75,.75],[0,14.5,1.5]
+    ];
+    mel.forEach(function(n){self.nota(n[0],{when:n[1]*B,dur:Math.max(.3,n[2]*B+.12),vol:.5});});
+    /* baixo (progressão I-vi-IV-V, o "abraço" harmônico das canções infantis) */
+    var baixo=[130.81,110,87.31,98];
+    baixo.forEach(function(f,compasso){
+      for(var b=0;b<4;b++){self.tone(f,{when:(compasso*4+b)*B,dur:.34,vol:.42,type:'sine',seco:true});}
+    });
+    /* brilho no contratempo (bem sutil) */
+    for(var b=0;b<16;b+=2){self.tone(2093,{when:(b+1.5)*B,dur:.09,vol:.07,seco:true});}
+    self.tema.timer=setTimeout(loop,16*B*1000);
+  })();
+};
+
+/* ---------- voz em português (Web Speech, com fallback silencioso) ---------- */
+var VOZ={
+  vozPt:null,pronta:false,
+  init:function(){
+    if(!('speechSynthesis' in window))return;
+    var self=this;
+    function achar(){
+      var vs=speechSynthesis.getVoices();
+      /* escolhe a voz mais "fofa" disponível: pt-BR > pt, feminina/natural > padrão */
+      var melhor=null,melhorNota=-1;
+      vs.forEach(function(v){
+        if(!v.lang)return;
+        var lang=v.lang.toLowerCase().replace('_','-');
+        if(lang.indexOf('pt')!==0)return;
+        var nome=(v.name||'').toLowerCase(),nota=1;
+        if(lang==='pt-br')nota+=4;
+        ['luciana','francisca','camila','maria','fernanda','vitoria','vitória','thalita','yara','female','feminin','mulher'].forEach(function(f){if(nome.indexOf(f)>=0)nota+=3});
+        if(nome.indexOf('google')>=0)nota+=2;
+        if(nome.indexOf('natural')>=0||nome.indexOf('neural')>=0||nome.indexOf('online')>=0)nota+=2;
+        if(nota>melhorNota){melhorNota=nota;melhor=v;}
+      });
+      self.vozPt=melhor;
+      self.pronta=true;
+    }
+    achar();
+    speechSynthesis.onvoiceschanged=achar;
+  },
+  falar:function(texto,opts){
+    opts=opts||{};
+    if(opts.id&&tocarAudio('voz-'+opts.id))return; /* voz natural gravada */
+    if(!S.som||!S.voz)return;
+    if(!('speechSynthesis' in window))return;
+    try{
+      if(!opts.empilhar)speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(texto);
+      u.lang='pt-BR';u.rate=opts.rate||(S.vozLenta?.85:.98);u.pitch=opts.pitch||1.1;u.volume=1;
+      if(this.vozPt)u.voice=this.vozPt;
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+};
+VOZ.init();
+
+/* desbloqueio de áudio no primeiro toque (exigência do iOS/Android) */
+var audioLiberado=false;
+document.addEventListener('pointerdown',function(){
+  AE.ensure();
+  if(typeof S!=='undefined'&&S.pagina===0)setTimeout(function(){AE.tocarTema()},50);
+  if(!audioLiberado){
+    audioLiberado=true;
+    try{if('speechSynthesis' in window){var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}}catch(e){}
+  }
+},true);
+
+/* ---------- recompensas visuais ---------- */
+var CORES_FESTA=['#ffd23f','#ff5f5f','#4dc9ff','#7ee081','#ff9de2','#b39dff','#ffb347'];
+function confete(qtd){
+  qtd=qtd||70;
+  for(var i=0;i<qtd;i++){
+    var c=document.createElement('div');
+    c.className='confete';
+    var forma=Math.random();
+    c.style.background=CORES_FESTA[i%CORES_FESTA.length];
+    c.style.left=Math.random()*100+'vw';
+    c.style.width=c.style.height=(7+Math.random()*9)+'px';
+    if(forma>.6)c.style.borderRadius='50%';
+    c.style.animationDuration=(1.6+Math.random()*1.8)+'s';
+    c.style.animationDelay=(Math.random()*.4)+'s';
+    document.body.appendChild(c);
+    (function(el){setTimeout(function(){el.remove()},4200)})(c);
+  }
+}
+function brilhoEm(x,y,simbolo){
+  var b=document.createElement('div');
+  b.className='brilho';b.textContent=simbolo||'✨';
+  b.style.left=(x-11)+'px';b.style.top=(y-11)+'px';
+  document.body.appendChild(b);
+  setTimeout(function(){b.remove()},850);
+}
+var FRASES_FESTA=['Muito bem! Você conseguiu!','Uau! Isso mesmo!','Que capricho! Parabéns!','Você aprendeu direitinho!','Iupiii! Você é demais!','Olha só que lindo!'];
+function celebrar(msg){
+  var faixa=$('#faixa-parabens');
+  faixa.textContent=msg||FRASES_FESTA[Math.floor(Math.random()*FRASES_FESTA.length)];
+  faixa.classList.remove('mostrando');
+  void faixa.offsetWidth;
+  faixa.classList.add('mostrando');
+}
+var tapsDepoisDeGanhar=0;
+document.addEventListener('pointerdown',function(ev){
+  if(typeof PAGINAS==='undefined')return;
+  var pg=PAGINAS[S.pagina];
+  if(!pg||!S.estrelas[pg.id]||S.pagina>=PAGINAS.length-1)return;
+  var seta=$('#seta-prox');
+  if(seta&&ev.target&&(ev.target===seta||seta.contains(ev.target)))return;
+  tapsDepoisDeGanhar++;
+  if(tapsDepoisDeGanhar%8===0){
+    /* convite sonoro subindo: "vem, tem mais!" + mãozinha na seta */
+    AE.nota(3,{dur:.22,vol:.55});AE.nota(5,{when:.16,dur:.22,vol:.55});AE.nota(7,{when:.32,dur:.4,vol:.55});
+    if(seta)mostrarDica(seta);
+    VOZ.falar('Vamos para a próxima?',{id:'proxima'});
+  }
+});
+
+var dicaEl=null,dicaTimer=null;
+function removerDica(){if(dicaTimer){clearTimeout(dicaTimer);dicaTimer=null}if(dicaEl){dicaEl.remove();dicaEl=null}}
+function mostrarDica(alvo){
+  removerDica();
+  if(!alvo)return;
+  var r=alvo.getBoundingClientRect();
+  if(!r.width)return;
+  dicaEl=document.createElement('div');
+  dicaEl.className='maozinha';
+  dicaEl.textContent='👆';
+  dicaEl.style.left=(r.left+r.width/2-23)+'px';
+  dicaEl.style.top=(r.top+r.height*.55)+'px';
+  document.body.appendChild(dicaEl);
+  dicaTimer=setTimeout(removerDica,4500);
+}
+document.addEventListener('pointerdown',function(){removerDica()},true);
+
+function ganharEstrela(idPagina,msg){
+  if(S.estrelas[idPagina])return false;
+  S.estrelas[idPagina]=true;salvar();
+  AE.fanfarra();confete(80);
+  var frase=msg||FRASES_FESTA[Math.floor(Math.random()*FRASES_FESTA.length)];
+  celebrar('⭐ '+frase);
+  VOZ.falar(frase+' Você ganhou uma estrela!',{id:'parabens'});
+  /* estrela voa até o contador */
+  var alvo=$('#estrelas-hud').getBoundingClientRect();
+  for(var i=0;i<3;i++){
+    var e=document.createElement('div');
+    e.className='estrela-premio';e.textContent='⭐';
+    var x0=window.innerWidth/2+(i-1)*40,y0=window.innerHeight*.42;
+    e.style.left=x0+'px';e.style.top=y0+'px';
+    e.style.setProperty('--dx',(alvo.left+20-x0)+'px');
+    e.style.setProperty('--dy',(alvo.top+10-y0)+'px');
+    e.style.animationDelay=(i*.12)+'s';
+    document.body.appendChild(e);
+    (function(el){setTimeout(function(){el.remove()},1600)})(e);
+  }
+  setTimeout(atualizarHud,1000);
+  /* terminou a atividade: chama a atenção para a próxima página */
+  setTimeout(function(){
+    var seta=$('#seta-prox');
+    if(seta&&!seta.disabled){
+      seta.classList.add('pulsa');
+      mostrarDica(seta);
+      VOZ.falar('Vamos para a próxima?',{id:'proxima'});
+    }
+  },1900);
+  tapsDepoisDeGanhar=0;
+  return true;
+}
+function atualizarHud(){
+  $('#conta-estrelas').textContent=totalEstrelas();
+  $$('.bolinha-nav').forEach(function(b,i){
+    b.classList.toggle('ativa',i===S.pagina);
+    b.classList.toggle('feita',!!S.estrelas[PAGINAS[i].id]);
+  });
+  $('#btn-som').textContent=S.som?'🔊':'🔇';
+}
+
+/* ---------- céu estrelado de fundo ---------- */
+(function(){
+  var ceu=$('#ceu');
+  for(var i=0;i<42;i++){
+    var e=document.createElement('div');
+    e.className='estrela-bg';
+    var tam=1+Math.random()*3;
+    e.style.width=e.style.height=tam+'px';
+    e.style.left=Math.random()*100+'%';
+    e.style.top=Math.random()*100+'%';
+    e.style.setProperty('--dur',(2+Math.random()*3.5)+'s');
+    e.style.setProperty('--del',(Math.random()*3)+'s');
+    ceu.appendChild(e);
+  }
+})();
+</script>
+<script>
+'use strict';
+/* ============================================================
+   PERSONAGENS (SVG desenhado à mão — 100% original)
+   ============================================================ */
+var CORES_BOLINHAS=['#ff5f5f','#4dc9ff','#7ee081','#ffb347','#ff9de2','#b39dff'];
+
+function svgPipo(opts){
+  opts=opts||{};
+  var corpo=opts.corpo||'#ffd23f',asa=opts.asa||'#f5b81e';
+  var dots=opts.dots||CORES_BOLINHAS;
+  var extra=opts.extra||'';
+  return '<svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">'
+    /* pés */
+    +'<g stroke="#ff9430" stroke-width="8" stroke-linecap="round" fill="none">'
+    +'<path d="M82 196 L82 212 M82 212 L72 221 M82 212 L92 221"/>'
+    +'<path d="M118 196 L118 212 M118 212 L108 221 M118 212 L128 221"/></g>'
+    /* topete */
+    +'<g stroke="'+asa+'" stroke-width="7" stroke-linecap="round" fill="none">'
+    +'<path d="M88 46 Q84 28 74 26"/><path d="M100 42 Q100 22 96 16"/><path d="M112 46 Q118 28 128 28"/></g>'
+    /* corpo */
+    +'<ellipse cx="100" cy="126" rx="76" ry="80" fill="'+corpo+'"/>'
+    /* asas */
+    +'<ellipse cx="30" cy="140" rx="17" ry="34" fill="'+asa+'" transform="rotate(18 30 140)"/>'
+    +'<ellipse cx="170" cy="140" rx="17" ry="34" fill="'+asa+'" transform="rotate(-18 170 140)"/>'
+    /* bolinhas pintadas */
+    +'<circle cx="64" cy="152" r="12" fill="'+dots[0%dots.length]+'"/>'
+    +'<circle cx="100" cy="176" r="13" fill="'+dots[1%dots.length]+'"/>'
+    +'<circle cx="136" cy="152" r="12" fill="'+dots[2%dots.length]+'"/>'
+    +'<circle cx="79" cy="185" r="9" fill="'+dots[3%dots.length]+'"/>'
+    +'<circle cx="121" cy="187" r="9" fill="'+dots[4%dots.length]+'"/>'
+    /* olhos grandes (baby schema) */
+    +'<ellipse cx="74" cy="97" rx="17" ry="19" fill="#fff"/>'
+    +'<ellipse cx="126" cy="97" rx="17" ry="19" fill="#fff"/>'
+    +'<circle cx="77" cy="100" r="8.5" fill="#2b2b2b"/>'
+    +'<circle cx="123" cy="100" r="8.5" fill="#2b2b2b"/>'
+    +'<circle cx="80" cy="97" r="3" fill="#fff"/>'
+    +'<circle cx="126" cy="97" r="3" fill="#fff"/>'
+    /* bochechas */
+    +'<ellipse cx="56" cy="124" rx="10" ry="7" fill="#ff9d9d" opacity=".75"/>'
+    +'<ellipse cx="144" cy="124" rx="10" ry="7" fill="#ff9d9d" opacity=".75"/>'
+    /* bico */
+    +'<path d="M100 112 L117 124 L100 136 L83 124 Z" fill="#ff9430"/>'
+    +'<path d="M86 124 L114 124" stroke="#d97316" stroke-width="2.5" stroke-linecap="round"/>'
+    +extra
+    +'</svg>';
+}
+/* pintinho pequeno (amigos do Pipo) */
+function svgPintinho(cor,dots){
+  return svgPipo({corpo:cor||'#ffd23f',asa:'#f5b81e',dots:dots||['#ff5f5f','#4dc9ff','#7ee081','#ffb347','#ff9de2']});
+}
+
+function svgGato(){
+  return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">'
+    +'<path d="M22 40 L14 10 L44 24 Z" fill="#ffb347"/><path d="M98 40 L106 10 L76 24 Z" fill="#ffb347"/>'
+    +'<path d="M24 36 L19 18 L38 27 Z" fill="#ff8fb1"/><path d="M96 36 L101 18 L82 27 Z" fill="#ff8fb1"/>'
+    +'<circle cx="60" cy="66" r="46" fill="#ffb347"/>'
+    +'<ellipse cx="44" cy="58" rx="10" ry="12" fill="#fff"/><ellipse cx="76" cy="58" rx="10" ry="12" fill="#fff"/>'
+    +'<circle cx="46" cy="60" r="5" fill="#2b2b2b"/><circle cx="74" cy="60" r="5" fill="#2b2b2b"/>'
+    +'<path d="M60 74 L66 81 L60 86 L54 81 Z" fill="#ff8fb1"/>'
+    +'<path d="M60 86 Q52 96 44 90 M60 86 Q68 96 76 90" stroke="#8a5a1f" stroke-width="3" fill="none" stroke-linecap="round"/>'
+    +'<g stroke="#8a5a1f" stroke-width="2.5" stroke-linecap="round"><path d="M30 76 L10 72 M30 82 L12 84"/><path d="M90 76 L110 72 M90 82 L108 84"/></g>'
+    +'</svg>';
+}
+function svgVaca(){
+  return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">'
+    +'<path d="M30 22 Q18 8 10 16 Q14 30 30 32 Z" fill="#e8d9c0"/><path d="M90 22 Q102 8 110 16 Q106 30 90 32 Z" fill="#e8d9c0"/>'
+    +'<ellipse cx="22" cy="42" rx="13" ry="8" fill="#f4b8c9" transform="rotate(-20 22 42)"/>'
+    +'<ellipse cx="98" cy="42" rx="13" ry="8" fill="#f4b8c9" transform="rotate(20 98 42)"/>'
+    +'<circle cx="60" cy="64" r="44" fill="#fff"/>'
+    +'<path d="M32 40 Q26 56 38 60 Q48 52 42 40 Z" fill="#4a4a4a"/><path d="M88 84 Q98 78 92 66 Q80 68 80 80 Z" fill="#4a4a4a"/>'
+    +'<ellipse cx="42" cy="58" rx="9" ry="11" fill="#fff" stroke="#dcdcdc"/><ellipse cx="78" cy="58" rx="9" ry="11" fill="#fff" stroke="#dcdcdc"/>'
+    +'<circle cx="44" cy="60" r="4.5" fill="#2b2b2b"/><circle cx="76" cy="60" r="4.5" fill="#2b2b2b"/>'
+    +'<ellipse cx="60" cy="90" rx="26" ry="17" fill="#f4b8c9"/>'
+    +'<ellipse cx="50" cy="90" rx="4.5" ry="6" fill="#d98ba3"/><ellipse cx="70" cy="90" rx="4.5" ry="6" fill="#d98ba3"/>'
+    +'</svg>';
+}
+function svgCachorro(){
+  return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">'
+    +'<path d="M26 34 Q8 40 12 66 Q26 72 34 58 Z" fill="#8a5a2f"/><path d="M94 34 Q112 40 108 66 Q94 72 86 58 Z" fill="#8a5a2f"/>'
+    +'<circle cx="60" cy="64" r="44" fill="#c98d4f"/>'
+    +'<ellipse cx="60" cy="82" rx="22" ry="17" fill="#e8c297"/>'
+    +'<ellipse cx="44" cy="56" rx="9" ry="11" fill="#fff"/><ellipse cx="76" cy="56" rx="9" ry="11" fill="#fff"/>'
+    +'<circle cx="46" cy="58" r="4.5" fill="#2b2b2b"/><circle cx="74" cy="58" r="4.5" fill="#2b2b2b"/>'
+    +'<ellipse cx="60" cy="76" rx="8" ry="6" fill="#2b2b2b"/>'
+    +'<path d="M60 82 L60 90 M60 90 Q50 98 44 92 M60 90 Q70 98 76 92" stroke="#5a3a1a" stroke-width="3" fill="none" stroke-linecap="round"/>'
+    +'<path d="M56 96 Q60 104 66 97 Q64 92 58 93 Z" fill="#ff8fb1"/>'
+    +'</svg>';
+}
+function svgPato(){
+  return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;overflow:visible">'
+    +'<path d="M52 18 Q60 6 68 16 Q64 24 58 24 Z" fill="#eef4f8"/>'
+    +'<circle cx="60" cy="62" r="42" fill="#f4f9fc"/>'
+    +'<ellipse cx="44" cy="54" rx="9" ry="11" fill="#fff" stroke="#d8e2ea"/><ellipse cx="76" cy="54" rx="9" ry="11" fill="#fff" stroke="#d8e2ea"/>'
+    +'<circle cx="46" cy="56" r="4.5" fill="#2b2b2b"/><circle cx="74" cy="56" r="4.5" fill="#2b2b2b"/>'
+    +'<ellipse cx="60" cy="80" rx="24" ry="12" fill="#ff9430"/>'
+    +'<path d="M38 80 Q60 88 82 80" stroke="#d97316" stroke-width="3" fill="none" stroke-linecap="round"/>'
+    +'<ellipse cx="38" cy="70" rx="7" ry="5" fill="#ffc9d6" opacity=".8"/><ellipse cx="82" cy="70" rx="7" ry="5" fill="#ffc9d6" opacity=".8"/>'
+    +'</svg>';
+}
+function svgOvoInteiro(rachado){
+  return '<svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">'
+    +'<g class="ovo-inteiro">'
+    +'<path d="M60 8 C90 8 108 50 108 92 C108 124 87 142 60 142 C33 142 12 124 12 92 C12 50 30 8 60 8 Z" fill="#fff6e3"/>'
+    +'<circle cx="42" cy="60" r="5" fill="#f3e2bd"/><circle cx="76" cy="48" r="4" fill="#f3e2bd"/>'
+    +'<circle cx="82" cy="96" r="6" fill="#f3e2bd"/><circle cx="38" cy="104" r="4" fill="#f3e2bd"/>'
+    +'<circle cx="60" cy="76" r="4" fill="#f3e2bd"/>'
+    +(rachado?'<path d="M30 76 L44 64 L52 80 L66 62 L76 82 L90 68" stroke="#c9a86a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':'')
+    +'</g></svg>';
+}
+function svgCascaBaixo(){
+  return '<svg viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">'
+    +'<path d="M14 92 L26 76 L36 92 L48 74 L60 92 L72 74 L84 92 L96 76 L106 92 C106 124 87 142 60 142 C33 142 14 124 14 92 Z" fill="#fff6e3"/>'
+    +'<circle cx="82" cy="112" r="6" fill="#f3e2bd"/><circle cx="40" cy="116" r="4" fill="#f3e2bd"/>'
+    +'</svg>';
+}
+
+/* ============================================================
+   AS 10 PÁGINAS MÁGICAS
+   ============================================================ */
+function letrasColoridas(texto){
+  var html='',i=0;
+  texto.split('').forEach(function(ch){
+    if(ch===' '){html+='<span class="letra" style="width:.4em"></span>';return}
+    html+='<span class="letra" style="--i:'+i+';color:'+CORES_FESTA[i%CORES_FESTA.length]+'">'+ch+'</span>';
+    i++;
+  });
+  return html;
+}
+
+/* ---------- 1. CAPA MÁGICA ---------- */
+function pgCapa(el){
+  el.innerHTML=
+    '<div class="pipo-wrap flutuando" id="pipo-capa" style="width:min(44vw,220px);cursor:pointer">'+svgPipo()+'</div>'
+    +'<div class="titulo-capa">'+letrasColoridas('O Livro Mágico')+'</div>'
+    +'<div class="titulo-capa">'+letrasColoridas('do Pipo')+'</div>'
+    +'<div class="subtitulo-capa">✨ Toque, cante, pinte e descubra! ✨</div>'
+    +'<div class="subtitulo-capa" style="font-size:.72em;opacity:.75">🎵 toque na tela para ouvir a música do Pipo</div>'
+    +'<button class="btn-magico" id="btn-comecar">▶ Começar a magia</button>';
+  $('#pipo-capa svg').classList.add('pipo');
+  $('#pipo-capa').addEventListener('pointerdown',function(){
+    var p=$('svg',this);
+    p.classList.remove('pulando');void p.offsetWidth;p.classList.add('pulando');
+    AE.piu();
+    VOZ.falar('Piu piu!');
+  });
+  $('#btn-comecar').addEventListener('click',function(){
+    [0,1,2,4].forEach(function(n,i){AE.nota(n,{when:i*.09,dur:.4})});
+    VOZ.falar('Oba! Vamos brincar! Segue comigo!');
+    setTimeout(function(){irPara(1)},700);
+  });
+}
+
+/* ---------- 2. CADÊ O PIPO? ---------- */
+function pgOvos(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🥚 Cadê o Pipo?</h1>'
+    +'<div class="balao">Toque nos ovos para ver quem está escondido!</div>'
+    +'<div id="area-ovos"></div>';
+  var area=$('#area-ovos');
+  var surpresas=[
+    {tipo:'estrela',som:function(){AE.sucesso()},fala:'Olha! Uma estrela brilhante!'},
+    {tipo:'lila',som:function(){AE.piu()},fala:'É a Lila, minha melhor amiga!'},
+    {tipo:'pipo',som:function(){AE.piu();setTimeout(function(){AE.piu()},350)},fala:'Achou! Sou eu, o Pipo!'}
+  ];
+  /* embaralha as surpresas */
+  surpresas.sort(function(){return Math.random()-.5});
+  var abertos=0;
+  surpresas.forEach(function(sur,i){
+    var slot=document.createElement('div');
+    slot.className='ovo-slot';
+    slot.innerHTML='<div style="position:absolute;inset:0;--i:'+i+'" class="ovo-cheio">'+svgOvoInteiro(false)+'</div>';
+    slot.dataset.estado='0';
+    area.appendChild(slot);
+    slot.addEventListener('pointerdown',function(ev){
+      var estado=+slot.dataset.estado;
+      if(estado===0){
+        slot.dataset.estado='1';
+        AE.tone(220,{dur:.15,vol:.6,type:'triangle',seco:true});
+        $('.ovo-cheio',slot).innerHTML=svgOvoInteiro(true);
+        brilhoEm(ev.clientX,ev.clientY,'💥');
+      }else if(estado===1){
+        slot.dataset.estado='2';
+        AE.pop();
+        var conteudo;
+        if(sur.tipo==='estrela')conteudo='<div style="font-size:clamp(48px,13vw,76px);text-align:center;line-height:1">⭐</div>';
+        else if(sur.tipo==='lila')conteudo='<div style="width:82%;margin:0 auto">'+svgPintinho('#ffb6d9',['#b39dff','#4dc9ff','#7ee081','#ffd23f','#ff5f5f'])+'</div>';
+        else conteudo='<div style="width:88%;margin:0 auto">'+svgPipo()+'</div>';
+        slot.innerHTML=
+          '<div class="surpresa" style="position:absolute;left:0;right:0;bottom:26%">'+conteudo+'</div>'
+          +'<div style="position:absolute;inset:0;pointer-events:none">'+svgCascaBaixo()+'</div>';
+        sur.som();
+        VOZ.falar(sur.fala,{id:'ovo-'+sur.tipo});
+        brilhoEm(ev.clientX,ev.clientY,'✨');
+        abertos++;
+        if(abertos===3)setTimeout(function(){ganharEstrela('ovos','Você achou todo mundo!')},900);
+      }else{
+        AE.piu();
+        var s=$('.surpresa',slot);
+        if(s){s.classList.remove('surpresa');void s.offsetWidth;s.classList.add('surpresa');}
+      }
+    });
+  });
+}
+
+/* ---------- 3. PINTE AS BOLINHAS DO PIPO ---------- */
+function pgPintar(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🎨 Pinte as Bolinhas do Pipo</h1>'
+    +'<div class="balao">Toque nas bolinhas cinzas para pintar!</div>'
+    +'<div class="pipo-wrap" style="width:min(62vw,300px)">'
+    +'<svg viewBox="0 0 200 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;overflow:visible" id="pipo-pintar">'
+    +'<g stroke="#ff9430" stroke-width="8" stroke-linecap="round" fill="none">'
+    +'<path d="M82 196 L82 212 M82 212 L72 221 M82 212 L92 221"/>'
+    +'<path d="M118 196 L118 212 M118 212 L108 221 M118 212 L128 221"/></g>'
+    +'<g stroke="#f5b81e" stroke-width="7" stroke-linecap="round" fill="none">'
+    +'<path d="M88 46 Q84 28 74 26"/><path d="M100 42 Q100 22 96 16"/><path d="M112 46 Q118 28 128 28"/></g>'
+    +'<ellipse cx="100" cy="126" rx="76" ry="80" fill="#ffd23f"/>'
+    +'<ellipse cx="30" cy="140" rx="17" ry="34" fill="#f5b81e" transform="rotate(18 30 140)"/>'
+    +'<ellipse cx="170" cy="140" rx="17" ry="34" fill="#f5b81e" transform="rotate(-18 170 140)"/>'
+    +[[64,150,14],[100,176,15],[136,150,14],[76,187,11],[124,187,11],[100,148,12]].map(function(d,i){
+      return '<g class="dot-pintavel dot-vazia" data-i="'+i+'">'
+        +'<circle cx="'+d[0]+'" cy="'+d[1]+'" r="'+(d[2]+15)+'" fill="rgba(0,0,0,0)"/>'
+        +'<circle class="dot-visivel" cx="'+d[0]+'" cy="'+d[1]+'" r="'+d[2]+'" fill="#d8d8d8" stroke="#fff" stroke-width="3" stroke-dasharray="6 5"/>'
+        +'</g>';
+    }).join('')
+    +'<ellipse cx="74" cy="97" rx="17" ry="19" fill="#fff"/><ellipse cx="126" cy="97" rx="17" ry="19" fill="#fff"/>'
+    +'<circle cx="77" cy="100" r="8.5" fill="#2b2b2b"/><circle cx="123" cy="100" r="8.5" fill="#2b2b2b"/>'
+    +'<circle cx="80" cy="97" r="3" fill="#fff"/><circle cx="126" cy="97" r="3" fill="#fff"/>'
+    +'<ellipse cx="56" cy="124" rx="10" ry="7" fill="#ff9d9d" opacity=".75"/><ellipse cx="144" cy="124" rx="10" ry="7" fill="#ff9d9d" opacity=".75"/>'
+    +'<path d="M100 112 L117 124 L100 136 L83 124 Z" fill="#ff9430"/>'
+    +'</svg></div>'
+    +'<div class="balao" id="dica-pintar" style="visibility:hidden">Cada bolinha toca uma música! 🎵</div>';
+  var pintadas={};
+  var nomesCores=['Vermelho! Que cor linda!','Azul, como o céu!','Verde, como as folhas!','Laranja, como o meu bico!','Rosa! Que fofo!','Roxo! Uau!'];
+  $$('#pipo-pintar .dot-pintavel').forEach(function(dot){
+    dot.addEventListener('pointerdown',function(ev){
+      var i=+dot.dataset.i;
+      var vis=$('.dot-visivel',dot);
+      var atual=dot.dataset.cor?+dot.dataset.cor:-1;
+      var nova=(atual+1)%CORES_BOLINHAS.length;
+      if(atual===-1)nova=i%CORES_BOLINHAS.length;
+      dot.dataset.cor=nova;
+      vis.setAttribute('fill',CORES_BOLINHAS[nova]);
+      vis.setAttribute('stroke-dasharray','none');
+      dot.classList.remove('dot-vazia');
+      AE.nota(nova,{dur:.5,vol:.85});
+      VOZ.falar(nomesCores[nova],{id:'cor-'+nova});
+      brilhoEm(ev.clientX,ev.clientY);
+      if(!pintadas[i]){
+        pintadas[i]=true;
+        if(Object.keys(pintadas).length===6){
+          var svg=$('#pipo-pintar');
+          svg.classList.add('pipo','dancando');
+          $('#dica-pintar').style.visibility='visible';
+          setTimeout(function(){ganharEstrela('pintar','O Pipo ficou lindo!')},400);
+          setTimeout(function(){svg.classList.remove('dancando')},3500);
+        }
+      }
+    });
+  });
+}
+
+/* ---------- 4. O PIANO DOS BICHOS ---------- */
+function pgPiano(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🎹 O Piano dos Bichos</h1>'
+    +'<div class="balao">Toque nos bichinhos para ouvir a música deles!</div>'
+    +'<div id="piano"></div>';
+  var bichos=[
+    {nome:'vaca',rotulo:'Muu!',fala:'A vaca faz muu!',svg:svgVaca(),cor:'#ff9de2'},
+    {nome:'gato',rotulo:'Miau!',fala:'O gato faz miau!',svg:svgGato(),cor:'#ffb347'},
+    {nome:'cachorro',rotulo:'Au au!',fala:'O cachorro faz au au!',svg:svgCachorro(),cor:'#7ee081'},
+    {nome:'pato',rotulo:'Quá quá!',fala:'O pato faz quá quá!',svg:svgPato(),cor:'#4dc9ff'},
+    {nome:'pipo',rotulo:'Piu piu!',fala:'E eu faço piu piu!',svg:svgPintinho(),cor:'#ffd23f'}
+  ];
+  var piano=$('#piano'),tocados={};
+  bichos.forEach(function(b,i){
+    var tecla=document.createElement('button');
+    tecla.className='tecla';
+    tecla.style.background='linear-gradient(180deg,'+b.cor+' 0%,'+b.cor+'cc 100%)';
+    tecla.innerHTML=b.svg+'<span class="nome-bicho">'+b.rotulo+'</span>';
+    tecla.setAttribute('aria-label',b.nome);
+    piano.appendChild(tecla);
+    tecla.addEventListener('pointerdown',function(){
+      tecla.classList.add('tocando');
+      AE.bicho(b.nome);
+      VOZ.falar(b.fala,{id:b.nome});
+      setTimeout(function(){tecla.classList.remove('tocando')},450);
+      if(!tocados[b.nome]){
+        tocados[b.nome]=true;
+        if(Object.keys(tocados).length===bichos.length){
+          setTimeout(function(){ganharEstrela('piano','Você tocou com todos os bichos!')},600);
+        }
+      }
+    });
+  });
+}
+
+/* ---------- 5. CIRCULE O GATO ---------- */
+function dentroDoDesenho(px,py,pts){
+  var c=false;
+  for(var i=0,j=pts.length-1;i<pts.length;j=i++){
+    if(((pts[i].y>py)!==(pts[j].y>py))&&(px<(pts[j].x-pts[i].x)*(py-pts[i].y)/(pts[j].y-pts[i].y)+pts[i].x))c=!c;
+  }
+  return c;
+}
+function pgCircular(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">✏️ Circule o GATO!</h1>'
+    +'<div class="balao">Desenhe uma bolinha em volta do bichinho que faz <b>MIAU</b>!</div>'
+    +'<div class="quadro" id="quadro-circular">'
+    +'<div class="bicho-alvo" data-bicho="vaca" style="left:8%;top:6%">'+svgVaca()+'</div>'
+    +'<div class="bicho-alvo" data-bicho="pato" style="right:8%;top:6%">'+svgPato()+'</div>'
+    +'<div class="bicho-alvo" data-bicho="cachorro" style="left:8%;bottom:8%">'+svgCachorro()+'</div>'
+    +'<div class="bicho-alvo" data-bicho="gato" style="right:8%;bottom:8%">'+svgGato()+'</div>'
+    +'<canvas id="tela-circular"></canvas>'
+    +'</div>'
+    +'<button class="btn-mini" id="btn-limpar-circulo">🧽 Limpar</button>';
+  var quadro=$('#quadro-circular'),cv=$('#tela-circular'),ctx=cv.getContext('2d');
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function medir(){
+    cv.width=quadro.clientWidth*dpr;cv.height=quadro.clientHeight*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.lineWidth=11;ctx.lineCap='round';ctx.lineJoin='round';
+    ctx.strokeStyle='#ffd23f';ctx.shadowColor='rgba(255,210,63,.8)';ctx.shadowBlur=8;
+  }
+  medir();
+  var desenhando=false,pontos=[],t0=0,resolvido=false,tentativas=0;
+  var FALAS_BICHOS={vaca:'Muu! Essa é a vaca. Cadê o gato?',pato:'Quá quá! Esse é o pato. Cadê o gato?',cachorro:'Au au! Esse é o cachorro. Cadê o gato?'};
+  function posLocal(ev){
+    var r=cv.getBoundingClientRect();
+    return {x:ev.clientX-r.left,y:ev.clientY-r.top};
+  }
+  function limpar(){ctx.clearRect(0,0,cv.width,cv.height);pontos=[]}
+  quadro.addEventListener('pointerdown',function(ev){
+    ev.preventDefault();
+    quadro.setPointerCapture(ev.pointerId);
+    desenhando=true;t0=performance.now();
+    pontos=[posLocal(ev)];
+    AE.toque();
+  });
+  quadro.addEventListener('pointermove',function(ev){
+    if(!desenhando)return;
+    var p=posLocal(ev),ant=pontos[pontos.length-1];
+    if(Math.abs(p.x-ant.x)+Math.abs(p.y-ant.y)<3)return;
+    pontos.push(p);
+    ctx.beginPath();ctx.moveTo(ant.x,ant.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+  });
+  quadro.addEventListener('pointerup',function(ev){
+    if(!desenhando)return;
+    desenhando=false;
+    var durou=performance.now()-t0;
+    /* toque curto = criança explorando os bichos → toca o som do bicho */
+    if(pontos.length<10&&durou<400){
+      var p=posLocal(ev),r=cv.getBoundingClientRect();
+      var alvo=null;
+      $$('.bicho-alvo',quadro).forEach(function(b){
+        var rb=b.getBoundingClientRect();
+        if(ev.clientX>=rb.left&&ev.clientX<=rb.right&&ev.clientY>=rb.top&&ev.clientY<=rb.bottom)alvo=b;
+      });
+      if(alvo){
+        AE.bicho(alvo.dataset.bicho);
+        var falas={vaca:'Muu! Eu sou a vaca.',pato:'Quá quá! Eu sou o pato.',cachorro:'Au au! Eu sou o cachorro.',gato:'Miau! Miau!'};
+        VOZ.falar(falas[alvo.dataset.bicho]);
+      }
+      limpar();
+      return;
+    }
+    if(resolvido||pontos.length<14){limpar();return}
+    /* avaliação carinhosa: qual bicho ficou dentro do desenho? */
+    var rc=cv.getBoundingClientRect(),dentroDe=[];
+    $$('.bicho-alvo',quadro).forEach(function(b){
+      var rb=b.getBoundingClientRect();
+      var cx=rb.left+rb.width/2-rc.left,cy=rb.top+rb.height/2-rc.top;
+      if(dentroDoDesenho(cx,cy,pontos))dentroDe.push(b.dataset.bicho);
+    });
+    if(dentroDe.indexOf('gato')>=0&&dentroDe.length===1){
+      resolvido=true;
+      $('.bicho-alvo[data-bicho=gato]',quadro).classList.add('achado');
+      AE.bicho('gato');
+      setTimeout(function(){ganharEstrela('circular','Miau! Você achou o gato!')},350);
+    }else if(dentroDe.length>0){
+      /* erro que ensina: o bicho circulado faz o som dele e redireciona */
+      var errado=dentroDe.filter(function(b){return b!=='gato'})[0];
+      if(errado){AE.bicho(errado);VOZ.falar(FALAS_BICHOS[errado]||'Quase! O gato faz miau!');}
+      else{AE.quase();VOZ.falar('Quase! Circule só o gato!');}
+      tentativas++;
+      if(tentativas>=2)$('.bicho-alvo[data-bicho=gato]',quadro).classList.add('dica');
+      setTimeout(limpar,900);
+    }else{
+      AE.toque();
+      tentativas++;
+      VOZ.falar('Desenhe uma bolinha em volta do gato!');
+      if(tentativas>=2)$('.bicho-alvo[data-bicho=gato]',quadro).classList.add('dica');
+      setTimeout(limpar,900);
+    }
+  });
+  $('#btn-limpar-circulo').addEventListener('click',function(){AE.whoosh();limpar()});
+  window.addEventListener('resize',medir);
+  return function(){window.removeEventListener('resize',medir)};
+}
+</script>
+<script>
+'use strict';
+/* ---------- 6. CONTE OS PINTINHOS ---------- */
+function pgContar(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🐤 Conte os Pintinhos</h1>'
+    +'<div class="balao" id="balao-contar">Toque nos pintinhos, um por um!</div>'
+    +'<div id="numero-gigante">&nbsp;</div>'
+    +'<div id="area-contar"></div>';
+  var NUM=['um','dois','três','quatro','cinco'];
+  var CORPOS=['#ffd23f','#ffb6d9','#a8e6ff','#c5f0a4','#ffd23f'];
+  var rodadas=[
+    [[22,34],[60,42]],
+    [[12,18],[58,10],[36,54]],
+    [[6,10],[50,6],[72,44],[14,54],[38,32]]
+  ];
+  var rodada=0,area=$('#area-contar'),timers=[];
+  function montarRodada(){
+    area.innerHTML='';
+    $('#numero-gigante').innerHTML='&nbsp;';
+    var poses=rodadas[rodada],contados=0;
+    poses.forEach(function(p,i){
+      var d=document.createElement('div');
+      d.className='pintinho-contavel';
+      d.style.left=p[0]+'%';d.style.top=p[1]+'%';
+      d.style.setProperty('--i',i);
+      d.innerHTML=svgPintinho(CORPOS[i%CORPOS.length]);
+      area.appendChild(d);
+      d.addEventListener('pointerdown',function(ev){
+        if(d.dataset.ok)return;
+        d.dataset.ok='1';
+        d.classList.add('contado');
+        contados++;
+        AE.nota(contados,{dur:.5,vol:.85});
+        AE.piu();
+        VOZ.falar(NUM[contados-1]+'!',{id:'num-'+contados});
+        $('#numero-gigante').textContent=contados;
+        var n=document.createElement('div');
+        n.className='numero-flutuante';n.textContent=contados;
+        n.style.left=p[0]+'%';n.style.top=Math.max(0,p[1]-8)+'%';
+        area.appendChild(n);
+        timers.push(setTimeout(function(){n.remove()},1200));
+        brilhoEm(ev.clientX,ev.clientY);
+        if(contados===poses.length){
+          timers.push(setTimeout(function(){
+            VOZ.falar('São '+NUM[poses.length-1]+' pintinhos! Você contou tudo certinho!');
+            AE.sucesso();
+            rodada++;
+            if(rodada<rodadas.length){
+              $('#balao-contar').textContent='Agora vieram mais pintinhos! Conte de novo!';
+              timers.push(setTimeout(montarRodada,1700));
+            }else{
+              timers.push(setTimeout(function(){ganharEstrela('contar','Você contou todos os pintinhos!')},900));
+            }
+          },500));
+        }
+      });
+    });
+  }
+  montarRodada();
+  return function(){timers.forEach(clearTimeout)};
+}
+
+/* ---------- 7. FORMAS MÁGICAS ---------- */
+function pgFormas(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🔷 Formas Mágicas</h1>'
+    +'<div class="balao">Arraste cada forma para a casinha certa!</div>'
+    +'<div id="area-formas"></div>';
+  var area=$('#area-formas');
+  function svgForma(tipo,cor,tracejado){
+    var fill=tracejado?'none':cor;
+    var stroke=tracejado?'stroke="rgba(255,255,255,.65)" stroke-width="5" stroke-dasharray="12 9" stroke-linejoin="round"':'';
+    var s='<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;overflow:visible">';
+    if(tipo==='circulo')s+='<circle cx="50" cy="50" r="42" fill="'+fill+'" '+stroke+'/>';
+    else if(tipo==='quadrado')s+='<rect x="9" y="9" width="82" height="82" rx="14" fill="'+fill+'" '+stroke+'/>';
+    else s+='<path d="M50 8 L93 88 L7 88 Z" fill="'+fill+'" '+stroke+'/>';
+    if(!tracejado){ /* carinha feliz na forma */
+      s+='<circle cx="38" cy="48" r="5" fill="rgba(0,0,0,.55)"/><circle cx="62" cy="48" r="5" fill="rgba(0,0,0,.55)"/>'
+        +'<path d="M38 62 Q50 72 62 62" stroke="rgba(0,0,0,.55)" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    }
+    return s+'</svg>';
+  }
+  var formas=[
+    {tipo:'circulo',nome:'Círculo',cor:'#ff5f5f'},
+    {tipo:'quadrado',nome:'Quadrado',cor:'#4dc9ff'},
+    {tipo:'triangulo',nome:'Triângulo',cor:'#7ee081'}
+  ];
+  var ordemPecas=[1,2,0]; /* embaralhado de propósito */
+  var encaixadas=0;
+  formas.forEach(function(f,i){
+    var slot=document.createElement('div');
+    slot.className='encaixe';
+    slot.style.cssText='border:none;left:'+(5+i*33)+'%;top:4%;width:27%;aspect-ratio:1';
+    slot.dataset.tipo=f.tipo;
+    slot.innerHTML=svgForma(f.tipo,f.cor,true);
+    area.appendChild(slot);
+  });
+  ordemPecas.forEach(function(fi,col){
+    var f=formas[fi];
+    var peca=document.createElement('div');
+    peca.className='forma-peca';
+    var left=(9+col*33),top=64;
+    peca.style.cssText='left:'+left+'%;top:'+top+'%;width:22%;aspect-ratio:1;transition:none';
+    peca.dataset.tipo=f.tipo;
+    peca.innerHTML=svgForma(f.tipo,f.cor,false);
+    area.appendChild(peca);
+    var origem=null;
+    peca.addEventListener('pointerdown',function(ev){
+      if(peca.dataset.travada)return;
+      ev.preventDefault();
+      peca.setPointerCapture(ev.pointerId);
+      peca.classList.add('arrastando');
+      peca.style.transition='none';
+      var r=peca.getBoundingClientRect();
+      origem={dx:ev.clientX-r.left,dy:ev.clientY-r.top,left:peca.style.left,top:peca.style.top};
+      AE.toque();
+      VOZ.falar(f.nome+'! Leve até a casinha!');
+    });
+    peca.addEventListener('pointermove',function(ev){
+      if(!origem||peca.dataset.travada)return;
+      var ra=area.getBoundingClientRect();
+      peca.style.left=(ev.clientX-ra.left-origem.dx)+'px';
+      peca.style.top=(ev.clientY-ra.top-origem.dy)+'px';
+    });
+    function soltar(){
+      if(!origem||peca.dataset.travada)return;
+      peca.classList.remove('arrastando');
+      var slot=$('.encaixe[data-tipo="'+f.tipo+'"]',area);
+      var rs=slot.getBoundingClientRect(),rp=peca.getBoundingClientRect();
+      var dist=Math.hypot((rs.left+rs.width/2)-(rp.left+rp.width/2),(rs.top+rs.height/2)-(rp.top+rp.height/2));
+      if(dist<rs.width*.7){
+        var ra=area.getBoundingClientRect();
+        peca.style.left=(rs.left-ra.left+(rs.width-rp.width)/2)+'px';
+        peca.style.top=(rs.top-ra.top+(rs.height-rp.height)/2)+'px';
+        peca.dataset.travada='1';
+        peca.classList.add('travada');
+        slot.classList.add('cheio');
+        AE.nota(encaixadas*2,{dur:.5});
+        AE.pop();
+        VOZ.falar('Encaixou! Isso mesmo!');
+        encaixadas++;
+        if(encaixadas===3)setTimeout(function(){ganharEstrela('formas','Todas as formas na casinha!')},500);
+      }else{
+        /* não volta ao início: fica onde a criança soltou (sem frustração) */
+        AE.toque();
+        VOZ.falar('Quase lá! Leve até a casinha tracejada!');
+        var ra2=area.getBoundingClientRect(),rp2=peca.getBoundingClientRect();
+        var nx=Math.max(0,Math.min(ra2.width-rp2.width,rp2.left-ra2.left));
+        var ny=Math.max(0,Math.min(ra2.height-rp2.height,rp2.top-ra2.top));
+        peca.style.left=nx+'px';peca.style.top=ny+'px';
+      }
+      origem=null;
+    }
+    peca.addEventListener('pointerup',soltar);
+    peca.addEventListener('pointercancel',soltar);
+  });
+}
+
+/* ---------- 8. A MÚSICA DO PIPO ---------- */
+function pgMusica(el){
+  var LETRA=[
+    {t:'Pipo, Pipo, pintinho pintado',n:[[2,.5],[2,.5],[3,.5],[3,.5],[4,.5],[4,.5],[3,1]]},
+    {t:'Pula, pula, não fica parado',n:[[4,.5],[4,.5],[3,.5],[3,.5],[2,.5],[2,.5],[1,1]]},
+    {t:'Bate a asinha: piu, piu, piu!',n:[[2,.5],[2,.5],[3,.5],[3,.5],[5,.5],[5,.5],[5,1]]},
+    {t:'Bolinha vermelha, bolinha azul',n:[[4,.5],[4,.5],[3,.5],[3,.5],[2,.5],[2,.5],[1,1]]},
+    {t:'Pipo, Pipo, pintinho pintado',n:[[2,.5],[2,.5],[3,.5],[3,.5],[4,.5],[4,.5],[3,1]]},
+    {t:'Canta comigo: piu, piu, PIU!',n:[[3,.5],[3,.5],[2,.5],[2,.5],[5,.5],[5,.5],[5,1.4]]}
+  ];
+  el.innerHTML=
+    '<h1 class="titulo-pag">🎵 A Música do Pipo</h1>'
+    +'<div class="pipo-wrap" id="pipo-musica" style="width:min(30vw,150px)">'+svgPipo()+'</div>'
+    +'<div id="letra-musica">'+LETRA.map(function(l,i){
+      return '<div class="linha-letra" data-i="'+i+'">'+l.t+'</div>';
+    }).join('')+'</div>'
+    +'<button class="btn-magico btn-verde" id="btn-cantar" style="font-size:clamp(17px,4.6vw,24px);padding:14px 34px">▶ Tocar a música</button>';
+  $('#pipo-musica svg').classList.add('pipo');
+  var timers=[],tocando=false;
+  var BEAT=.55;
+  $('#btn-cantar').addEventListener('click',function(){
+    if(tocando)return;
+    tocando=true;
+    AE.ensure();
+    var btn=this;btn.style.opacity='.4';btn.style.animation='none';
+    $('#pipo-musica svg').classList.add('dancando');
+    /* música profissional embutida? toca ela e sincroniza a letra pela duração */
+    if(AUDIO['musica-pipo']){
+      var a=AUDIO_PLAYERS['musica-pipo']||(AUDIO_PLAYERS['musica-pipo']=new Audio(AUDIO['musica-pipo']));
+      a.loop=false;a.volume=1;a.currentTime=0;
+      var sincronizar=function(){
+        var dur=(a.duration&&isFinite(a.duration))?a.duration:22;
+        var porLinha=dur/LETRA.length;
+        LETRA.forEach(function(l,li){
+          timers.push(setTimeout(function(){
+            $$('.linha-letra').forEach(function(x){x.classList.remove('cantando')});
+            var at=$('.linha-letra[data-i="'+li+'"]');
+            if(at)at.classList.add('cantando');
+            var nv=document.createElement('div');
+            nv.className='nota-voadora';nv.textContent=['🎵','🎶','🎵','⭐'][li%4];
+            nv.style.left=(30+Math.random()*40)+'vw';nv.style.top='60vh';
+            document.body.appendChild(nv);
+            timers.push(setTimeout(function(){nv.remove()},2300));
+          },li*porLinha*1000));
+        });
+        timers.push(setTimeout(function(){
+          $$('.linha-letra').forEach(function(x){x.classList.remove('cantando')});
+          var svg=$('#pipo-musica svg');if(svg)svg.classList.remove('dancando');
+          btn.style.opacity='1';btn.innerHTML='🎵 Cantar de novo';tocando=false;
+          ganharEstrela('musica','Que música linda!');
+        },(dur+.5)*1000));
+      };
+      if(a.readyState>=1)sincronizar();
+      else a.addEventListener('loadedmetadata',sincronizar,{once:true});
+      a.play();
+      return;
+    }
+    var quando=0.1;
+    var RAIZES=[130.81,110,87.31,98]; /* dó, lá, fá, sol — o abraço harmônico */
+    LETRA.forEach(function(linha,li){
+      var inicio=quando;
+      linha.n.forEach(function(nd){
+        AE.nota(nd[0],{when:quando,dur:Math.max(.4,nd[1]*BEAT+.15),vol:.85});
+        quando+=nd[1]*BEAT;
+      });
+      for(var t=inicio;t<quando-.05;t+=BEAT){
+        AE.tone(RAIZES[li%RAIZES.length],{when:t,dur:.34,vol:.4,type:'sine',seco:true});
+      }
+      quando+=.25; /* respiro entre versos */
+      timers.push(setTimeout(function(){
+        $$('.linha-letra').forEach(function(l){l.classList.remove('cantando')});
+        var atual=$('.linha-letra[data-i="'+li+'"]');
+        if(atual)atual.classList.add('cantando');
+        VOZ.falar(linha.t.replace(/[!:,]/g,''),{rate:1.05});
+        var nv=document.createElement('div');
+        nv.className='nota-voadora';
+        nv.textContent=['🎵','🎶','🎵','⭐'][li%4];
+        nv.style.left=(30+Math.random()*40)+'vw';
+        nv.style.top='60vh';
+        document.body.appendChild(nv);
+        timers.push(setTimeout(function(){nv.remove()},2300));
+      },inicio*1000));
+    });
+    timers.push(setTimeout(function(){
+      $$('.linha-letra').forEach(function(l){l.classList.remove('cantando')});
+      $('#pipo-musica svg').classList.remove('dancando');
+      btn.style.opacity='1';
+      btn.innerHTML='🎵 Cantar de novo';
+      tocando=false;
+      ganharEstrela('musica','Que música linda!');
+    },(quando+.6)*1000));
+  });
+  return function(){timers.forEach(clearTimeout);pararAudio('musica-pipo');try{speechSynthesis.cancel()}catch(e){}};
+}
+
+/* ---------- 9. TELA DE ESTRELAS (desenho musical) ---------- */
+function pgEstrelas(el){
+  el.innerHTML=
+    '<h1 class="titulo-pag">🌈 Tela de Estrelas</h1>'
+    +'<div class="balao">Desenhe com o dedo — cada traço faz música!</div>'
+    +'<div class="quadro" id="quadro-desenho" style="background:rgba(0,0,0,.28)">'
+    +'<canvas id="tela-desenho"></canvas>'
+    +'</div>'
+    +'<button class="btn-mini" id="btn-limpar-desenho">🧽 Limpar e desenhar de novo</button>';
+  var quadro=$('#quadro-desenho'),cv=$('#tela-desenho'),ctx=cv.getContext('2d');
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function medir(){
+    var img=null;
+    try{if(cv.width>0)img=ctx.getImageData(0,0,cv.width,cv.height)}catch(e){}
+    cv.width=quadro.clientWidth*dpr;cv.height=quadro.clientHeight*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.lineCap='round';ctx.lineJoin='round';
+  }
+  medir();
+  var hue=40,pontosTotais=0,desenhando=false,ultimo=null,desdeNota=0;
+  quadro.addEventListener('pointerdown',function(ev){
+    ev.preventDefault();
+    quadro.setPointerCapture(ev.pointerId);
+    desenhando=true;
+    var r=cv.getBoundingClientRect();
+    ultimo={x:ev.clientX-r.left,y:ev.clientY-r.top};
+    AE.nota(Math.floor((1-(ultimo.y/r.height))*7),{dur:.3,vol:.5});
+  });
+  quadro.addEventListener('pointermove',function(ev){
+    if(!desenhando)return;
+    var r=cv.getBoundingClientRect();
+    var p={x:ev.clientX-r.left,y:ev.clientY-r.top};
+    pontosTotais++;
+    if(pontosTotais===120)ganharEstrela('desenhar','Que desenho mágico!');
+    if(Math.abs(p.x-ultimo.x)+Math.abs(p.y-ultimo.y)<3)return;
+    hue=(hue+4)%360;
+    ctx.strokeStyle='hsl('+hue+',95%,65%)';
+    ctx.shadowColor='hsl('+hue+',95%,70%)';
+    ctx.shadowBlur=12;
+    ctx.lineWidth=12;
+    ctx.beginPath();ctx.moveTo(ultimo.x,ultimo.y);ctx.lineTo(p.x,p.y);ctx.stroke();
+    ultimo=p;
+    desdeNota++;
+    if(desdeNota>=7){
+      desdeNota=0;
+      AE.nota(Math.floor((1-(p.y/r.height))*7),{dur:.28,vol:.45});
+    }
+    if(pontosTotais%18===0)brilhoEm(ev.clientX,ev.clientY,['✨','⭐','💫'][Math.floor(Math.random()*3)]);
+    
+  });
+  function parar(){desenhando=false}
+  quadro.addEventListener('pointerup',parar);
+  quadro.addEventListener('pointercancel',parar);
+  $('#btn-limpar-desenho').addEventListener('click',function(){
+    AE.whoosh();
+    ctx.clearRect(0,0,cv.width,cv.height);
+  });
+  window.addEventListener('resize',medir);
+  return function(){window.removeEventListener('resize',medir)};
+}
+
+/* ---------- 10. DIPLOMA DO PIPO ---------- */
+function pgDiploma(el){
+  function telaFormulario(){
+    el.innerHTML=
+      '<h1 class="titulo-pag">🏆 Diploma do Pipo</h1>'
+      +'<div class="balao">Papai ou mamãe: escreva o nome da criança!</div>'
+      +'<div class="pipo-wrap flutuando" style="width:min(30vw,140px)">'+svgPipo()+'</div>'
+      +'<input class="campo-nome" id="campo-nome" maxlength="16" placeholder="Nome da criança" autocomplete="off">'
+      +'<button class="btn-magico btn-verde" id="btn-criar-diploma" style="font-size:clamp(17px,4.6vw,24px);padding:14px 34px">⭐ Criar o diploma!</button>';
+    if(S.nome)$('#campo-nome').value=S.nome;
+    $('#btn-criar-diploma').addEventListener('click',function(){
+      var nome=($('#campo-nome').value||'').trim();
+      if(!nome){VOZ.falar('Escreva o nome da criança!');AE.quase();return}
+      S.nome=nome;salvar();
+      mostrarDiploma(true);
+    });
+  }
+  function mostrarDiploma(festejar){
+    var n=totalEstrelas();
+    var dataHoje='';
+    try{dataHoje=new Date().toLocaleDateString('pt-BR')}catch(e){}
+    el.innerHTML=
+      '<div id="diploma">'
+      +'<div style="width:88px;margin:0 auto">'+svgPipo()+'</div>'
+      +'<h2>Certificado de Criança Incrível</h2>'
+      +'<div class="nome-diploma">'+S.nome.replace(/[<>&]/g,'')+'</div>'
+      +'<p>brincou, cantou, pintou, contou e desenhou<br>em todas as aventuras do <b>Livro Mágico do Pipo</b>!</p>'
+      +'<div class="estrelas-diploma">'+'⭐'.repeat(Math.max(1,n))+'</div>'
+      +'<p><b>'+n+' de 9 estrelas conquistadas</b></p>'
+      +(dataHoje?'<p style="font-size:12px;color:#8a7a4a">'+dataHoje+'</p>':'')
+      +'<p style="font-size:13px;margin-top:6px">Com carinho, <b style="color:#b3560c">Pipo, o Pintinho Pintado</b> 🐤</p>'
+      +'</div>'
+      +'<div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">'
+      +'<button class="btn-mini" id="btn-imprimir">🖨️ Imprimir diploma</button>'
+      +'<button class="btn-mini" id="btn-trocar-nome">✏️ Trocar o nome</button>'
+      +'</div>';
+    $('#btn-imprimir').addEventListener('click',function(){try{window.print()}catch(e){}});
+    $('#btn-trocar-nome').addEventListener('click',telaFormulario);
+    if(festejar){
+      confete(110);AE.fanfarra();
+      VOZ.falar('Parabéns, '+S.nome+'! Você é incrível!');
+      ganharEstrela('diploma','Diploma conquistado!');
+    }
+  }
+  if(S.nome)mostrarDiploma(false);else telaFormulario();
+}
+
+/* ============================================================
+   NAVEGAÇÃO E INICIALIZAÇÃO
+   ============================================================ */
+var PAGINAS=[
+  {id:'capa',build:pgCapa,dica:'#btn-comecar',fala:'Oi! Eu sou o Pipo! Toque no botão amarelo para brincar comigo!'},
+  {id:'ovos',build:pgOvos,dica:'.ovo-slot',fala:'Olha, três ovos com surpresa! Toque num ovo para ver quem mora ali!'},
+  {id:'pintar',build:pgPintar,dica:'.dot-pintavel',fala:'Toque nas bolinhas cinzas para pintar. Cada cor faz uma musiquinha!'},
+  {id:'piano',build:pgPiano,dica:'.tecla',fala:'Toque num bichinho para ouvir o som dele. Imite junto comigo!'},
+  {id:'circular',build:pgCircular,dica:'.bicho-alvo[data-bicho=gato]',fala:'O gato faz miau! Desenhe uma bolinha em volta do gato!'},
+  {id:'contar',build:pgContar,dica:'.pintinho-contavel',fala:'Toque nos pintinhos, um de cada vez, e conte comigo!'},
+  {id:'formas',build:pgFormas,dica:'.forma-peca',fala:'Arraste cada forma até a casinha igualzinha a ela!'},
+  {id:'musica',build:pgMusica,dica:'#btn-cantar',fala:'Toque no botão verde e cante comigo!'},
+  {id:'desenhar',build:pgEstrelas,dica:'#quadro-desenho',fala:'Passe o dedo na tela! Seu desenho vira arco-íris e faz música!'},
+  {id:'diploma',build:pgDiploma,dica:'#campo-nome',fala:'Você chegou ao final! Peça a um adulto para escrever o seu nome!'}
+];
+var limpezaAtual=null,falaTimer=null;
+
+function irPara(i){
+  i=Math.max(0,Math.min(PAGINAS.length-1,i));
+  if(limpezaAtual){try{limpezaAtual()}catch(e){}limpezaAtual=null}
+  if(falaTimer)clearTimeout(falaTimer);
+  try{speechSynthesis.cancel()}catch(e){}
+  var palco=$('#palco');
+  palco.innerHTML='';
+  var pag=document.createElement('div');
+  pag.className='pagina';
+  palco.appendChild(pag);
+  S.pagina=i;salvar();
+  var ret=PAGINAS[i].build(pag);
+  if(typeof ret==='function')limpezaAtual=ret;
+  $('#seta-ant').disabled=(i===0);
+  $('#seta-prox').disabled=(i===PAGINAS.length-1);
+  $('#seta-prox').classList.toggle('pulsa',!!S.estrelas[PAGINAS[i].id]&&i<PAGINAS.length-1);
+  atualizarHud();
+  if(i!==0)AE.pararTema();
+  pararAudio('musica-pipo');
+  tapsDepoisDeGanhar=0;
+  falaTimer=setTimeout(function(){VOZ.falar(PAGINAS[i].fala,{id:'instrucao-'+PAGINAS[i].id})},650);
+  setTimeout(function(){
+    if(S.pagina!==i||!PAGINAS[i].dica)return;
+    var alvo=$(PAGINAS[i].dica);
+    if(alvo)mostrarDica(alvo);
+  },900);
+  armarLembrete();
+}
+
+/* lembrete gentil: repete a instrução por voz após inatividade (máx. 2x por página) */
+var lembreteTimer=null,lembretesDados=0;
+function armarLembrete(){
+  if(lembreteTimer)clearTimeout(lembreteTimer);
+  lembretesDados=0;
+  agendarLembrete();
+}
+function agendarLembrete(){
+  lembreteTimer=setTimeout(function(){
+    if(lembretesDados>=2||!audioLiberado)return;
+    if($('#tela-pais').classList.contains('aberta'))return;
+    lembretesDados++;
+    if(PAGINAS[S.pagina].dica){var alvo=$(PAGINAS[S.pagina].dica);if(alvo)mostrarDica(alvo);}
+    VOZ.falar(PAGINAS[S.pagina].fala,{id:'instrucao-'+PAGINAS[S.pagina].id});
+    agendarLembrete();
+  },14000);
+}
+document.addEventListener('pointerdown',function(){
+  if(lembreteTimer)clearTimeout(lembreteTimer);
+  lembretesDados=0;
+  agendarLembrete();
+});
+
+(function init(){
+  var nav=$('#bolinhas-nav');
+  PAGINAS.forEach(function(p,i){
+    var b=document.createElement('div');
+    b.className='bolinha-nav';
+    b.addEventListener('click',function(){AE.toque();irPara(i)});
+    nav.appendChild(b);
+  });
+  $('#seta-ant').addEventListener('click',function(){AE.toque();irPara(S.pagina-1)});
+  $('#seta-prox').addEventListener('click',function(){AE.toque();irPara(S.pagina+1)});
+  $('#btn-som').addEventListener('click',function(){
+    S.som=!S.som;salvar();atualizarHud();
+    if(S.som)AE.sucesso();else AE.pararTema();
+    sincronizarChaves();
+  });
+
+  /* --- Cantinho dos Pais: segurar 3 segundos --- */
+  var btnPais=$('#btn-pais'),paisTimer=null,paisInicio=0;
+  function resetPais(){
+    if(paisTimer){cancelAnimationFrame(paisTimer);paisTimer=null}
+    btnPais.style.setProperty('--p',0);
+  }
+  btnPais.addEventListener('pointerdown',function(ev){
+    ev.preventDefault();
+    btnPais.setPointerCapture(ev.pointerId);
+    paisInicio=performance.now();
+    (function anima(){
+      var pct=Math.min(100,(performance.now()-paisInicio)/3000*100);
+      btnPais.style.setProperty('--p',pct);
+      if(pct>=100){
+        resetPais();
+        $('#tela-pais').classList.add('aberta');
+        AE.pop();
+        sincronizarChaves();
+      }else{
+        paisTimer=requestAnimationFrame(anima);
+      }
+    })();
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(evt){
+    btnPais.addEventListener(evt,function(){
+      if(paisTimer&&performance.now()-paisInicio<3000){
+        celebrar('Adultos: segurem o botão 👆');
+      }
+      resetPais();
+    });
+  });
+
+  function sincronizarChaves(){
+    var cs=$('#cfg-som'),cv2=$('#cfg-voz'),cl=$('#cfg-voz-lenta');
+    cs.classList.toggle('ligada',S.som);cs.textContent=S.som?'LIGADO':'DESLIGADO';
+    cv2.classList.toggle('ligada',S.voz);cv2.textContent=S.voz?'LIGADO':'DESLIGADO';
+    cl.classList.toggle('ligada',S.vozLenta);cl.textContent=S.vozLenta?'DEVAGAR':'NORMAL';
+  }
+  $('#cfg-som').addEventListener('click',function(){S.som=!S.som;salvar();sincronizarChaves();atualizarHud()});
+  $('#cfg-voz').addEventListener('click',function(){S.voz=!S.voz;salvar();sincronizarChaves()});
+  $('#cfg-voz-lenta').addEventListener('click',function(){
+    S.vozLenta=!S.vozLenta;salvar();sincronizarChaves();
+    VOZ.falar('Oi! Eu sou o Pipo!');
+  });
+  var resetArmado=false;
+  $('#cfg-reset').addEventListener('click',function(){
+    if(!resetArmado){resetArmado=true;this.textContent='TEM CERTEZA?';this.style.background='#ff5f5f';this.style.color='#fff';return}
+    S.estrelas={};S.nome='';S.pagina=0;salvar();
+    resetArmado=false;this.textContent='APAGADO ✓';this.style.background='#cdd4ef';this.style.color='#4a5493';
+    atualizarHud();
+  });
+  $('#cfg-fechar').addEventListener('click',function(){
+    $('#tela-pais').classList.remove('aberta');
+    AE.toque();
+    var b=$('#cfg-reset');b.textContent='APAGAR';resetArmado=false;
+  });
+
+  document.addEventListener('contextmenu',function(e){e.preventDefault()});
+  document.addEventListener('dblclick',function(e){e.preventDefault()});
+
+  irPara(0);
+})();
+</script>
+</body>
+</html>
