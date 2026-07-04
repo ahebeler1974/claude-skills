@@ -276,6 +276,12 @@ body{
 @keyframes estrela-voa{to{transform:translate(var(--dx),var(--dy)) scale(.5);opacity:.2}}
 .brilho{position:fixed;pointer-events:none;z-index:55;font-size:22px;animation:brilha .8s ease-out forwards}
 @keyframes brilha{from{transform:scale(.3);opacity:1}to{transform:scale(1.6) translateY(-24px);opacity:0}}
+.maozinha{
+  position:fixed;font-size:46px;z-index:26;pointer-events:none;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.5));
+  animation:mao-toca 1.15s ease-in-out infinite;
+}
+@keyframes mao-toca{0%,100%{transform:translateY(0) scale(1)}40%{transform:translateY(-16px) scale(1.18)}58%{transform:translateY(3px) scale(.94)}}
 #faixa-parabens{
   position:fixed;left:50%;top:38%;transform:translate(-50%,-50%) scale(.3);z-index:70;
   background:linear-gradient(#ffe27a,var(--amarelo));color:#5d3d00;
@@ -365,7 +371,7 @@ body{
     <h2>👨‍👩‍👧 Cantinho dos Pais</h2>
     <p style="font-size:13px;color:#7c86b8">Bem-vindo! Este espaço é só para adultos.</p>
     <div class="linha-config"><span>🔊 Sons e música</span><button class="chave ligada" id="cfg-som">LIGADO</button></div>
-    <div class="linha-config"><span>🗣️ Voz que fala com a criança</span><button class="chave ligada" id="cfg-voz">LIGADO</button></div>
+    <div class="linha-config"><span>🗣️ Narração por voz <small style="color:#7c86b8">(usa a voz do aparelho — qualidade varia)</small></span><button class="chave" id="cfg-voz">DESLIGADO</button></div>
     <div class="linha-config"><span>🐢 Voz mais devagar</span><button class="chave" id="cfg-voz-lenta">NORMAL</button></div>
     <div class="linha-config"><span>⭐ Recomeçar do zero</span><button class="chave" id="cfg-reset">APAGAR</button></div>
     <h3>💡 Como aproveitar melhor</h3>
@@ -388,9 +394,9 @@ var $=function(s,el){return (el||document).querySelector(s)};
 var $$=function(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))};
 
 /* ---------- estado persistente (só neste aparelho) ---------- */
-var S={pagina:0,estrelas:{},nome:'',som:true,voz:true,vozLenta:false};
-try{var salvo=localStorage.getItem('pipo-livro');if(salvo){var o=JSON.parse(salvo);for(var k in o)S[k]=o[k];}}catch(e){}
-function salvar(){try{localStorage.setItem('pipo-livro',JSON.stringify(S))}catch(e){}}
+var S={pagina:0,estrelas:{},nome:'',som:true,voz:false,vozLenta:false};
+try{var salvo=localStorage.getItem('pipo-livro-v2');if(salvo){var o=JSON.parse(salvo);for(var k in o)S[k]=o[k];}}catch(e){}
+function salvar(){try{localStorage.setItem('pipo-livro-v2',JSON.stringify(S))}catch(e){}}
 function totalEstrelas(){var n=0;for(var k in S.estrelas)if(S.estrelas[k])n++;return n}
 
 /* ---------- motor de áudio (Web Audio API — sons 100% sintetizados) ---------- */
@@ -445,7 +451,8 @@ var AE={
   fanfarra:function(){
     var self=this,seq=[0,2,4,7,4,7];
     seq.forEach(function(n,i){self.nota(n,{when:i*.13,dur:.55,vol:.9})});
-    this.tone(1568,{when:.85,dur:1.1,vol:.7});
+    [0,2,4].forEach(function(n){self.nota(n,{when:.85,dur:1.3,vol:.55})});
+    this.tone(1568,{when:.85,dur:1.2,vol:.45});
   },
   quase:function(){ /* erro gentil: duas notas descendo, macias */
     this.tone(494,{dur:.25,vol:.35,type:'triangle'});
@@ -461,6 +468,36 @@ var AE={
     else if(nome==='pato'){[0,.2].forEach(function(w){self.tone(280,{when:w,dur:.16,vol:.6,type:'sawtooth',sweep:200,seco:true})});}
     else this.piu();
   }
+};
+
+/* ---------- O TEMA DO PIPO: jingle instrumental que dá vida à capa ---------- */
+AE.tema={tocando:false,timer:null};
+AE.pararTema=function(){this.tema.tocando=false;if(this.tema.timer){clearTimeout(this.tema.timer);this.tema.timer=null;}};
+AE.tocarTema=function(){
+  if(!S.som||!this.ensure())return;
+  if(this.tema.tocando)return;
+  this.tema.tocando=true;
+  var self=this;
+  (function loop(){
+    if(!self.tema.tocando||!S.som){self.tema.tocando=false;return;}
+    var B=60/112; /* 112 BPM — o andamento dos fenômenos infantis */
+    /* melodia principal (pentatônica, 16 tempos, alegre e grudenta) */
+    var mel=[
+      [4,0,.5],[4,.5,.5],[5,1,1],[4,2,.5],[3,2.5,.5],[2,3,1],
+      [3,4,.5],[3,4.5,.5],[4,5,1],[3,6,.5],[2,6.5,.5],[1,7,1],
+      [4,8,.5],[4,8.5,.5],[5,9,1],[7,10,.5],[5,10.5,.5],[4,11,1],
+      [3,12,.5],[4,12.5,.5],[2,13,.75],[1,13.75,.75],[0,14.5,1.5]
+    ];
+    mel.forEach(function(n){self.nota(n[0],{when:n[1]*B,dur:Math.max(.3,n[2]*B+.12),vol:.5});});
+    /* baixo (progressão I-vi-IV-V, o "abraço" harmônico das canções infantis) */
+    var baixo=[130.81,110,87.31,98];
+    baixo.forEach(function(f,compasso){
+      for(var b=0;b<4;b++){self.tone(f,{when:(compasso*4+b)*B,dur:.34,vol:.42,type:'sine',seco:true});}
+    });
+    /* brilho no contratempo (bem sutil) */
+    for(var b=0;b<16;b+=2){self.tone(2093,{when:(b+1.5)*B,dur:.09,vol:.07,seco:true});}
+    self.tema.timer=setTimeout(loop,16*B*1000);
+  })();
 };
 
 /* ---------- voz em português (Web Speech, com fallback silencioso) ---------- */
@@ -509,6 +546,7 @@ VOZ.init();
 var audioLiberado=false;
 document.addEventListener('pointerdown',function(){
   AE.ensure();
+  if(typeof S!=='undefined'&&S.pagina===0)setTimeout(function(){AE.tocarTema()},50);
   if(!audioLiberado){
     audioLiberado=true;
     try{if('speechSynthesis' in window){var u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u);}}catch(e){}
@@ -548,6 +586,23 @@ function celebrar(msg){
   void faixa.offsetWidth;
   faixa.classList.add('mostrando');
 }
+var dicaEl=null,dicaTimer=null;
+function removerDica(){if(dicaTimer){clearTimeout(dicaTimer);dicaTimer=null}if(dicaEl){dicaEl.remove();dicaEl=null}}
+function mostrarDica(alvo){
+  removerDica();
+  if(!alvo)return;
+  var r=alvo.getBoundingClientRect();
+  if(!r.width)return;
+  dicaEl=document.createElement('div');
+  dicaEl.className='maozinha';
+  dicaEl.textContent='👆';
+  dicaEl.style.left=(r.left+r.width/2-23)+'px';
+  dicaEl.style.top=(r.top+r.height*.55)+'px';
+  document.body.appendChild(dicaEl);
+  dicaTimer=setTimeout(removerDica,4500);
+}
+document.addEventListener('pointerdown',function(){removerDica()},true);
+
 function ganharEstrela(idPagina,msg){
   if(S.estrelas[idPagina])return false;
   S.estrelas[idPagina]=true;salvar();
@@ -733,6 +788,7 @@ function pgCapa(el){
     +'<div class="titulo-capa">'+letrasColoridas('O Livro Mágico')+'</div>'
     +'<div class="titulo-capa">'+letrasColoridas('do Pipo')+'</div>'
     +'<div class="subtitulo-capa">✨ Toque, cante, pinte e descubra! ✨</div>'
+    +'<div class="subtitulo-capa" style="font-size:.72em;opacity:.75">🎵 toque na tela para ouvir a música do Pipo</div>'
     +'<button class="btn-magico" id="btn-comecar">▶ Começar a magia</button>';
   $('#pipo-capa svg').classList.add('pipo');
   $('#pipo-capa').addEventListener('pointerdown',function(){
@@ -1184,12 +1240,16 @@ function pgMusica(el){
     var btn=this;btn.style.opacity='.4';btn.style.animation='none';
     $('#pipo-musica svg').classList.add('dancando');
     var quando=0.1;
+    var RAIZES=[130.81,110,87.31,98]; /* dó, lá, fá, sol — o abraço harmônico */
     LETRA.forEach(function(linha,li){
       var inicio=quando;
       linha.n.forEach(function(nd){
         AE.nota(nd[0],{when:quando,dur:Math.max(.4,nd[1]*BEAT+.15),vol:.85});
         quando+=nd[1]*BEAT;
       });
+      for(var t=inicio;t<quando-.05;t+=BEAT){
+        AE.tone(RAIZES[li%RAIZES.length],{when:t,dur:.34,vol:.4,type:'sine',seco:true});
+      }
       quando+=.25; /* respiro entre versos */
       timers.push(setTimeout(function(){
         $$('.linha-letra').forEach(function(l){l.classList.remove('cantando')});
@@ -1329,16 +1389,16 @@ function pgDiploma(el){
    NAVEGAÇÃO E INICIALIZAÇÃO
    ============================================================ */
 var PAGINAS=[
-  {id:'capa',build:pgCapa,fala:'Oi! Eu sou o Pipo! Toque no botão amarelo para brincar comigo!'},
-  {id:'ovos',build:pgOvos,fala:'Olha, três ovos com surpresa! Toque num ovo para ver quem mora ali!'},
-  {id:'pintar',build:pgPintar,fala:'Toque nas bolinhas cinzas para pintar. Cada cor faz uma musiquinha!'},
-  {id:'piano',build:pgPiano,fala:'Toque num bichinho para ouvir o som dele. Imite junto comigo!'},
-  {id:'circular',build:pgCircular,fala:'O gato faz miau! Desenhe uma bolinha em volta do gato!'},
-  {id:'contar',build:pgContar,fala:'Toque nos pintinhos, um de cada vez, e conte comigo!'},
-  {id:'formas',build:pgFormas,fala:'Arraste cada forma até a casinha igualzinha a ela!'},
-  {id:'musica',build:pgMusica,fala:'Toque no botão verde e cante comigo!'},
-  {id:'desenhar',build:pgEstrelas,fala:'Passe o dedo na tela! Seu desenho vira arco-íris e faz música!'},
-  {id:'diploma',build:pgDiploma,fala:'Você chegou ao final! Peça a um adulto para escrever o seu nome!'}
+  {id:'capa',build:pgCapa,dica:'#btn-comecar',fala:'Oi! Eu sou o Pipo! Toque no botão amarelo para brincar comigo!'},
+  {id:'ovos',build:pgOvos,dica:'.ovo-slot',fala:'Olha, três ovos com surpresa! Toque num ovo para ver quem mora ali!'},
+  {id:'pintar',build:pgPintar,dica:'.dot-pintavel',fala:'Toque nas bolinhas cinzas para pintar. Cada cor faz uma musiquinha!'},
+  {id:'piano',build:pgPiano,dica:'.tecla',fala:'Toque num bichinho para ouvir o som dele. Imite junto comigo!'},
+  {id:'circular',build:pgCircular,dica:'.bicho-alvo[data-bicho=gato]',fala:'O gato faz miau! Desenhe uma bolinha em volta do gato!'},
+  {id:'contar',build:pgContar,dica:'.pintinho-contavel',fala:'Toque nos pintinhos, um de cada vez, e conte comigo!'},
+  {id:'formas',build:pgFormas,dica:'.forma-peca',fala:'Arraste cada forma até a casinha igualzinha a ela!'},
+  {id:'musica',build:pgMusica,dica:'#btn-cantar',fala:'Toque no botão verde e cante comigo!'},
+  {id:'desenhar',build:pgEstrelas,dica:'#quadro-desenho',fala:'Passe o dedo na tela! Seu desenho vira arco-íris e faz música!'},
+  {id:'diploma',build:pgDiploma,dica:'#campo-nome',fala:'Você chegou ao final! Peça a um adulto para escrever o seu nome!'}
 ];
 var limpezaAtual=null,falaTimer=null;
 
@@ -1359,7 +1419,13 @@ function irPara(i){
   $('#seta-prox').disabled=(i===PAGINAS.length-1);
   $('#seta-prox').classList.toggle('pulsa',!!S.estrelas[PAGINAS[i].id]&&i<PAGINAS.length-1);
   atualizarHud();
+  if(i!==0)AE.pararTema();
   falaTimer=setTimeout(function(){VOZ.falar(PAGINAS[i].fala)},650);
+  setTimeout(function(){
+    if(S.pagina!==i||!PAGINAS[i].dica)return;
+    var alvo=$(PAGINAS[i].dica);
+    if(alvo)mostrarDica(alvo);
+  },900);
   armarLembrete();
 }
 
@@ -1375,6 +1441,7 @@ function agendarLembrete(){
     if(lembretesDados>=2||!audioLiberado)return;
     if($('#tela-pais').classList.contains('aberta'))return;
     lembretesDados++;
+    if(PAGINAS[S.pagina].dica){var alvo=$(PAGINAS[S.pagina].dica);if(alvo)mostrarDica(alvo);}
     VOZ.falar(PAGINAS[S.pagina].fala);
     agendarLembrete();
   },14000);
@@ -1397,7 +1464,7 @@ document.addEventListener('pointerdown',function(){
   $('#seta-prox').addEventListener('click',function(){AE.toque();irPara(S.pagina+1)});
   $('#btn-som').addEventListener('click',function(){
     S.som=!S.som;salvar();atualizarHud();
-    if(S.som)AE.sucesso();
+    if(S.som)AE.sucesso();else AE.pararTema();
     sincronizarChaves();
   });
 
