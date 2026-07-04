@@ -366,6 +366,7 @@ body{
     <p style="font-size:13px;color:#7c86b8">Bem-vindo! Este espaço é só para adultos.</p>
     <div class="linha-config"><span>🔊 Sons e música</span><button class="chave ligada" id="cfg-som">LIGADO</button></div>
     <div class="linha-config"><span>🗣️ Voz que fala com a criança</span><button class="chave ligada" id="cfg-voz">LIGADO</button></div>
+    <div class="linha-config"><span>🐢 Voz mais devagar</span><button class="chave" id="cfg-voz-lenta">NORMAL</button></div>
     <div class="linha-config"><span>⭐ Recomeçar do zero</span><button class="chave" id="cfg-reset">APAGAR</button></div>
     <h3>💡 Como aproveitar melhor</h3>
     <p>O Livro Mágico foi feito para ser usado <b>junto</b>: sente ao lado, nomeie as cores, cante, comemore. A ciência mostra que a tela vira aprendizado quando o adulto participa. Sessões curtas (10–15 min) funcionam melhor.</p>
@@ -387,7 +388,7 @@ var $=function(s,el){return (el||document).querySelector(s)};
 var $$=function(s,el){return Array.prototype.slice.call((el||document).querySelectorAll(s))};
 
 /* ---------- estado persistente (só neste aparelho) ---------- */
-var S={pagina:0,estrelas:{},nome:'',som:true,voz:true};
+var S={pagina:0,estrelas:{},nome:'',som:true,voz:true,vozLenta:false};
 try{var salvo=localStorage.getItem('pipo-livro');if(salvo){var o=JSON.parse(salvo);for(var k in o)S[k]=o[k];}}catch(e){}
 function salvar(){try{localStorage.setItem('pipo-livro',JSON.stringify(S))}catch(e){}}
 function totalEstrelas(){var n=0;for(var k in S.estrelas)if(S.estrelas[k])n++;return n}
@@ -496,7 +497,7 @@ var VOZ={
     try{
       if(!opts.empilhar)speechSynthesis.cancel();
       var u=new SpeechSynthesisUtterance(texto);
-      u.lang='pt-BR';u.rate=opts.rate||.88;u.pitch=opts.pitch||1.5;u.volume=1;
+      u.lang='pt-BR';u.rate=opts.rate||(S.vozLenta?.85:.98);u.pitch=opts.pitch||1.1;u.volume=1;
       if(this.vozPt)u.voice=this.vozPt;
       speechSynthesis.speak(u);
     }catch(e){}
@@ -755,9 +756,9 @@ function pgOvos(el){
     +'<div id="area-ovos"></div>';
   var area=$('#area-ovos');
   var surpresas=[
-    {tipo:'estrela',som:function(){AE.sucesso()},fala:'Olha só! Uma estrela brilhante! Ela caiu do céu!'},
-    {tipo:'lila',som:function(){AE.piu()},fala:'É a Lila, a minha melhor amiga! Diga oi para a Lila!'},
-    {tipo:'pipo',som:function(){AE.piu();setTimeout(function(){AE.piu()},350)},fala:'Achou! Sou eu, o Pipo! Piu piu!'}
+    {tipo:'estrela',som:function(){AE.sucesso()},fala:'Olha! Uma estrela brilhante!'},
+    {tipo:'lila',som:function(){AE.piu()},fala:'É a Lila, minha melhor amiga!'},
+    {tipo:'pipo',som:function(){AE.piu();setTimeout(function(){AE.piu()},350)},fala:'Achou! Sou eu, o Pipo!'}
   ];
   /* embaralha as surpresas */
   surpresas.sort(function(){return Math.random()-.5});
@@ -1114,7 +1115,7 @@ function pgFormas(el){
       var r=peca.getBoundingClientRect();
       origem={dx:ev.clientX-r.left,dy:ev.clientY-r.top,left:peca.style.left,top:peca.style.top};
       AE.toque();
-      VOZ.falar('Este é o '+f.nome.toLowerCase()+'! Leve até a casinha dele!');
+      VOZ.falar(f.nome+'! Leve até a casinha!');
     });
     peca.addEventListener('pointermove',function(ev){
       if(!origem||peca.dataset.travada)return;
@@ -1328,16 +1329,16 @@ function pgDiploma(el){
    NAVEGAÇÃO E INICIALIZAÇÃO
    ============================================================ */
 var PAGINAS=[
-  {id:'capa',build:pgCapa,fala:'Oi, amiguinho! Eu sou o Pipo, o pintinho pintado! Toque no botão amarelo bem grande para a gente brincar juntos!'},
-  {id:'ovos',build:pgOvos,fala:'Olha! Três ovos! Tem surpresa dentro de cada um. Toque num ovo para descobrir quem mora ali!'},
-  {id:'pintar',build:pgPintar,fala:'Vamos pintar juntos? Toque numa bolinha cinza e veja a cor bonita aparecer! Cada cor faz uma musiquinha!'},
-  {id:'piano',build:pgPiano,fala:'Este é o piano dos bichos! Toque num bichinho para ouvir o som que ele faz. Depois, imite junto comigo!'},
-  {id:'circular',build:pgCircular,fala:'Escute bem: o gato faz miau, miau! Agora desenhe uma bolinha em volta do gato com o seu dedo!'},
-  {id:'contar',build:pgContar,fala:'Vamos contar juntos? Toque em cada pintinho, um de cada vez, e conte comigo: um, dois, três!'},
-  {id:'formas',build:pgFormas,fala:'Olhe as casinhas tracejadas lá em cima! Segure uma forma com o dedo e leve até a casinha igualzinha a ela!'},
-  {id:'musica',build:pgMusica,fala:'Hora de cantar! Toque no botão verde e cante bem alto comigo. A letra vai acender, olha só!'},
-  {id:'desenhar',build:pgEstrelas,fala:'Agora é a sua vez de criar! Passe o dedo na tela e veja a mágica: o seu desenho vira arco-íris e faz música!'},
-  {id:'diploma',build:pgDiploma,fala:'Uau, você chegou até o final! Peça para o papai ou a mamãe escrever o seu nome, porque você vai ganhar um diploma!'}
+  {id:'capa',build:pgCapa,fala:'Oi! Eu sou o Pipo! Toque no botão amarelo para brincar comigo!'},
+  {id:'ovos',build:pgOvos,fala:'Olha, três ovos com surpresa! Toque num ovo para ver quem mora ali!'},
+  {id:'pintar',build:pgPintar,fala:'Toque nas bolinhas cinzas para pintar. Cada cor faz uma musiquinha!'},
+  {id:'piano',build:pgPiano,fala:'Toque num bichinho para ouvir o som dele. Imite junto comigo!'},
+  {id:'circular',build:pgCircular,fala:'O gato faz miau! Desenhe uma bolinha em volta do gato!'},
+  {id:'contar',build:pgContar,fala:'Toque nos pintinhos, um de cada vez, e conte comigo!'},
+  {id:'formas',build:pgFormas,fala:'Arraste cada forma até a casinha igualzinha a ela!'},
+  {id:'musica',build:pgMusica,fala:'Toque no botão verde e cante comigo!'},
+  {id:'desenhar',build:pgEstrelas,fala:'Passe o dedo na tela! Seu desenho vira arco-íris e faz música!'},
+  {id:'diploma',build:pgDiploma,fala:'Você chegou ao final! Peça a um adulto para escrever o seu nome!'}
 ];
 var limpezaAtual=null,falaTimer=null;
 
@@ -1433,12 +1434,17 @@ document.addEventListener('pointerdown',function(){
   });
 
   function sincronizarChaves(){
-    var cs=$('#cfg-som'),cv2=$('#cfg-voz');
+    var cs=$('#cfg-som'),cv2=$('#cfg-voz'),cl=$('#cfg-voz-lenta');
     cs.classList.toggle('ligada',S.som);cs.textContent=S.som?'LIGADO':'DESLIGADO';
     cv2.classList.toggle('ligada',S.voz);cv2.textContent=S.voz?'LIGADO':'DESLIGADO';
+    cl.classList.toggle('ligada',S.vozLenta);cl.textContent=S.vozLenta?'DEVAGAR':'NORMAL';
   }
   $('#cfg-som').addEventListener('click',function(){S.som=!S.som;salvar();sincronizarChaves();atualizarHud()});
   $('#cfg-voz').addEventListener('click',function(){S.voz=!S.voz;salvar();sincronizarChaves()});
+  $('#cfg-voz-lenta').addEventListener('click',function(){
+    S.vozLenta=!S.vozLenta;salvar();sincronizarChaves();
+    VOZ.falar('Oi! Eu sou o Pipo!');
+  });
   var resetArmado=false;
   $('#cfg-reset').addEventListener('click',function(){
     if(!resetArmado){resetArmado=true;this.textContent='TEM CERTEZA?';this.style.background='#ff5f5f';this.style.color='#fff';return}
