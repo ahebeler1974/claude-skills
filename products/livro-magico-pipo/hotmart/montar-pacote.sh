@@ -12,7 +12,8 @@ mkdir -p "$SAIDA/bonus"
 
 cp "$RAIZ/produto/livro-magico-pipo.html" "$SAIDA/"
 cp "$RAIZ/bonus/atividades-para-imprimir.html" "$SAIDA/bonus/"
-cp "$RAIZ/bonus/guia-dos-pais.md" "$SAIDA/bonus/"
+[ -f "$RAIZ/bonus/caderno-de-atividades.pdf" ] && cp "$RAIZ/bonus/caderno-de-atividades.pdf" "$SAIDA/bonus/"
+[ -f "$RAIZ/bonus/guia-dos-pais.pdf" ] && cp "$RAIZ/bonus/guia-dos-pais.pdf" "$SAIDA/bonus/"
 
 cat > "$SAIDA/LEIA-ME-PRIMEIRO.txt" <<'EOF'
 🐤 O LIVRO MÁGICO DO PIPO — COMECE AQUI!
@@ -35,8 +36,8 @@ COMO ABRIR (30 segundos):
 🎁 BÔNUS (pasta "bonus"):
 - "atividades-para-imprimir.html": abra e imprima (menu →
   Imprimir). São 8 atividades de papel e lápis.
-- "guia-dos-pais.md": a ciência por trás de cada página
-  e como brincar junto (abra em qualquer leitor de texto).
+- "guia-dos-pais.pdf": a ciência por trás de cada página
+  e como brincar junto.
 
 👨‍👩‍👧 CANTINHO DOS PAIS: dentro do livro, segure o botão
    "Pais" por 3 segundos (canto superior direito).
@@ -59,5 +60,4 @@ echo "✅ Pacote criado: $ZIP"
 echo "Conteúdo:"
 cd "$SAIDA" && find . -type f | sort
 echo ""
-echo "Antes de subir no Hotmart: converta bonus/guia-dos-pais.md em PDF"
-echo "e teste o zip em um Android, um iPhone e um computador."
+echo "Antes de subir no Hotmart: teste o zip em um Android, um iPhone e um computador."
