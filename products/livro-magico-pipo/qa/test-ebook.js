@@ -27,7 +27,7 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/01-ovos-abertos.png` });
 
   // pintar
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   const dots = await page.$$('.dot-pintavel');
   console.log('bolinhas encontradas:', dots.length);
@@ -36,13 +36,13 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/02-pintar.png` });
 
   // piano
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${OUT}/03-piano.png` });
   for (const t of await page.$$('.tecla')) { await t.tap({ force: true }); await page.waitForTimeout(150); }
 
   // circular o gato — desenha um círculo em volta do gato (canto inf. direito)
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${OUT}/04-circular.png` });
   const q = await page.$('#quadro-circular');
@@ -60,7 +60,7 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/04-circular-feito.png` });
 
   // contar (3 rodadas: 2,3,5)
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${OUT}/05-contar.png` });
   for (const rodada of [2, 3, 5]) {
@@ -73,7 +73,7 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/05-contar-fim.png` });
 
   // formas — arrastar cada peça pro slot
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.screenshot({ path: `${OUT}/06-formas.png` });
   for (const tipo of ['circulo', 'quadrado', 'triangulo']) {
@@ -90,7 +90,7 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/06-formas-feito.png` });
 
   // música
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.tap('#btn-cantar', { force: true });
   await page.waitForTimeout(4000);
@@ -98,7 +98,7 @@ const OUT = './shots';
   await page.waitForTimeout(22000); // deixa a música acabar
 
   // desenhar
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   const qd = await page.$('#quadro-desenho');
   const bd = await qd.boundingBox();
@@ -115,7 +115,7 @@ const OUT = './shots';
   await page.screenshot({ path: `${OUT}/08-desenhar.png` });
 
   // diploma
-  await page.tap('#seta-prox');
+  await page.tap('#seta-prox', { force: true });
   await page.waitForTimeout(700);
   await page.fill('#campo-nome', 'Helena');
   await page.tap('#btn-criar-diploma', { force: true });

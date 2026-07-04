@@ -399,6 +399,29 @@ try{var salvo=localStorage.getItem('pipo-livro-v2');if(salvo){var o=JSON.parse(s
 function salvar(){try{localStorage.setItem('pipo-livro-v2',JSON.stringify(S))}catch(e){}}
 function totalEstrelas(){var n=0;for(var k in S.estrelas)if(S.estrelas[k])n++;return n}
 
+/* ---------- áudios profissionais (voz natural e músicas geradas por IA) ----------
+   Os MP3s são embutidos aqui pelo script producao-audio/embutir-audios.py.
+   Sem áudio embutido, o livro usa os sons sintetizados como reserva. */
+var AUDIO={};
+/*__AUDIOS_EMBUTIDOS__*/
+var AUDIO_PLAYERS={};
+function tocarAudio(id,opts){
+  if(!S.som||!AUDIO[id])return false;
+  opts=opts||{};
+  try{
+    var a=AUDIO_PLAYERS[id]||(AUDIO_PLAYERS[id]=new Audio(AUDIO[id]));
+    a.loop=!!opts.loop;
+    a.volume=opts.vol!=null?opts.vol:1;
+    a.currentTime=0;
+    a.play();
+    return true;
+  }catch(e){return false}
+}
+function pararAudio(id){
+  var a=AUDIO_PLAYERS[id];
+  if(a){try{a.pause();a.currentTime=0}catch(e){}}
+}
+
 /* ---------- motor de áudio (Web Audio API — sons 100% sintetizados) ---------- */
 var AE={
   ctx:null,master:null,
@@ -472,10 +495,12 @@ var AE={
 
 /* ---------- O TEMA DO PIPO: jingle instrumental que dá vida à capa ---------- */
 AE.tema={tocando:false,timer:null};
-AE.pararTema=function(){this.tema.tocando=false;if(this.tema.timer){clearTimeout(this.tema.timer);this.tema.timer=null;}};
+AE.pararTema=function(){this.tema.tocando=false;if(this.tema.timer){clearTimeout(this.tema.timer);this.tema.timer=null;}pararAudio('tema');};
 AE.tocarTema=function(){
-  if(!S.som||!this.ensure())return;
+  if(!S.som)return;
   if(this.tema.tocando)return;
+  if(AUDIO['tema']&&tocarAudio('tema',{loop:true,vol:.85})){this.tema.tocando=true;return;}
+  if(!this.ensure())return;
   this.tema.tocando=true;
   var self=this;
   (function loop(){
@@ -528,9 +553,10 @@ var VOZ={
     speechSynthesis.onvoiceschanged=achar;
   },
   falar:function(texto,opts){
+    opts=opts||{};
+    if(opts.id&&tocarAudio('voz-'+opts.id))return; /* voz natural gravada */
     if(!S.som||!S.voz)return;
     if(!('speechSynthesis' in window))return;
-    opts=opts||{};
     try{
       if(!opts.empilhar)speechSynthesis.cancel();
       var u=new SpeechSynthesisUtterance(texto);
@@ -586,6 +612,22 @@ function celebrar(msg){
   void faixa.offsetWidth;
   faixa.classList.add('mostrando');
 }
+var tapsDepoisDeGanhar=0;
+document.addEventListener('pointerdown',function(ev){
+  if(typeof PAGINAS==='undefined')return;
+  var pg=PAGINAS[S.pagina];
+  if(!pg||!S.estrelas[pg.id]||S.pagina>=PAGINAS.length-1)return;
+  var seta=$('#seta-prox');
+  if(seta&&ev.target&&(ev.target===seta||seta.contains(ev.target)))return;
+  tapsDepoisDeGanhar++;
+  if(tapsDepoisDeGanhar%8===0){
+    /* convite sonoro subindo: "vem, tem mais!" + mãozinha na seta */
+    AE.nota(3,{dur:.22,vol:.55});AE.nota(5,{when:.16,dur:.22,vol:.55});AE.nota(7,{when:.32,dur:.4,vol:.55});
+    if(seta)mostrarDica(seta);
+    VOZ.falar('Vamos para a próxima?',{id:'proxima'});
+  }
+});
+
 var dicaEl=null,dicaTimer=null;
 function removerDica(){if(dicaTimer){clearTimeout(dicaTimer);dicaTimer=null}if(dicaEl){dicaEl.remove();dicaEl=null}}
 function mostrarDica(alvo){
@@ -609,7 +651,7 @@ function ganharEstrela(idPagina,msg){
   AE.fanfarra();confete(80);
   var frase=msg||FRASES_FESTA[Math.floor(Math.random()*FRASES_FESTA.length)];
   celebrar('⭐ '+frase);
-  VOZ.falar(frase+'! Você ganhou uma estrela!');
+  VOZ.falar(frase+' Você ganhou uma estrela!',{id:'parabens'});
   /* estrela voa até o contador */
   var alvo=$('#estrelas-hud').getBoundingClientRect();
   for(var i=0;i<3;i++){
@@ -624,6 +666,16 @@ function ganharEstrela(idPagina,msg){
     (function(el){setTimeout(function(){el.remove()},1600)})(e);
   }
   setTimeout(atualizarHud,1000);
+  /* terminou a atividade: chama a atenção para a próxima página */
+  setTimeout(function(){
+    var seta=$('#seta-prox');
+    if(seta&&!seta.disabled){
+      seta.classList.add('pulsa');
+      mostrarDica(seta);
+      VOZ.falar('Vamos para a próxima?',{id:'proxima'});
+    }
+  },1900);
+  tapsDepoisDeGanhar=0;
   return true;
 }
 function atualizarHud(){
@@ -843,7 +895,7 @@ function pgOvos(el){
           '<div class="surpresa" style="position:absolute;left:0;right:0;bottom:26%">'+conteudo+'</div>'
           +'<div style="position:absolute;inset:0;pointer-events:none">'+svgCascaBaixo()+'</div>';
         sur.som();
-        VOZ.falar(sur.fala);
+        VOZ.falar(sur.fala,{id:'ovo-'+sur.tipo});
         brilhoEm(ev.clientX,ev.clientY,'✨');
         abertos++;
         if(abertos===3)setTimeout(function(){ganharEstrela('ovos','Você achou todo mundo!')},900);
@@ -898,7 +950,7 @@ function pgPintar(el){
       vis.setAttribute('stroke-dasharray','none');
       dot.classList.remove('dot-vazia');
       AE.nota(nova,{dur:.5,vol:.85});
-      VOZ.falar(nomesCores[nova]);
+      VOZ.falar(nomesCores[nova],{id:'cor-'+nova});
       brilhoEm(ev.clientX,ev.clientY);
       if(!pintadas[i]){
         pintadas[i]=true;
@@ -938,7 +990,7 @@ function pgPiano(el){
     tecla.addEventListener('pointerdown',function(){
       tecla.classList.add('tocando');
       AE.bicho(b.nome);
-      VOZ.falar(b.fala);
+      VOZ.falar(b.fala,{id:b.nome});
       setTimeout(function(){tecla.classList.remove('tocando')},450);
       if(!tocados[b.nome]){
         tocados[b.nome]=true;
@@ -1089,7 +1141,7 @@ function pgContar(el){
         contados++;
         AE.nota(contados,{dur:.5,vol:.85});
         AE.piu();
-        VOZ.falar(NUM[contados-1]+'!');
+        VOZ.falar(NUM[contados-1]+'!',{id:'num-'+contados});
         $('#numero-gigante').textContent=contados;
         var n=document.createElement('div');
         n.className='numero-flutuante';n.textContent=contados;
@@ -1239,6 +1291,37 @@ function pgMusica(el){
     AE.ensure();
     var btn=this;btn.style.opacity='.4';btn.style.animation='none';
     $('#pipo-musica svg').classList.add('dancando');
+    /* música profissional embutida? toca ela e sincroniza a letra pela duração */
+    if(AUDIO['musica-pipo']){
+      var a=AUDIO_PLAYERS['musica-pipo']||(AUDIO_PLAYERS['musica-pipo']=new Audio(AUDIO['musica-pipo']));
+      a.loop=false;a.volume=1;a.currentTime=0;
+      var sincronizar=function(){
+        var dur=(a.duration&&isFinite(a.duration))?a.duration:22;
+        var porLinha=dur/LETRA.length;
+        LETRA.forEach(function(l,li){
+          timers.push(setTimeout(function(){
+            $$('.linha-letra').forEach(function(x){x.classList.remove('cantando')});
+            var at=$('.linha-letra[data-i="'+li+'"]');
+            if(at)at.classList.add('cantando');
+            var nv=document.createElement('div');
+            nv.className='nota-voadora';nv.textContent=['🎵','🎶','🎵','⭐'][li%4];
+            nv.style.left=(30+Math.random()*40)+'vw';nv.style.top='60vh';
+            document.body.appendChild(nv);
+            timers.push(setTimeout(function(){nv.remove()},2300));
+          },li*porLinha*1000));
+        });
+        timers.push(setTimeout(function(){
+          $$('.linha-letra').forEach(function(x){x.classList.remove('cantando')});
+          var svg=$('#pipo-musica svg');if(svg)svg.classList.remove('dancando');
+          btn.style.opacity='1';btn.innerHTML='🎵 Cantar de novo';tocando=false;
+          ganharEstrela('musica','Que música linda!');
+        },(dur+.5)*1000));
+      };
+      if(a.readyState>=1)sincronizar();
+      else a.addEventListener('loadedmetadata',sincronizar,{once:true});
+      a.play();
+      return;
+    }
     var quando=0.1;
     var RAIZES=[130.81,110,87.31,98]; /* dó, lá, fá, sol — o abraço harmônico */
     LETRA.forEach(function(linha,li){
@@ -1274,7 +1357,7 @@ function pgMusica(el){
       ganharEstrela('musica','Que música linda!');
     },(quando+.6)*1000));
   });
-  return function(){timers.forEach(clearTimeout);try{speechSynthesis.cancel()}catch(e){}};
+  return function(){timers.forEach(clearTimeout);pararAudio('musica-pipo');try{speechSynthesis.cancel()}catch(e){}};
 }
 
 /* ---------- 9. TELA DE ESTRELAS (desenho musical) ---------- */
@@ -1420,7 +1503,9 @@ function irPara(i){
   $('#seta-prox').classList.toggle('pulsa',!!S.estrelas[PAGINAS[i].id]&&i<PAGINAS.length-1);
   atualizarHud();
   if(i!==0)AE.pararTema();
-  falaTimer=setTimeout(function(){VOZ.falar(PAGINAS[i].fala)},650);
+  pararAudio('musica-pipo');
+  tapsDepoisDeGanhar=0;
+  falaTimer=setTimeout(function(){VOZ.falar(PAGINAS[i].fala,{id:'instrucao-'+PAGINAS[i].id})},650);
   setTimeout(function(){
     if(S.pagina!==i||!PAGINAS[i].dica)return;
     var alvo=$(PAGINAS[i].dica);
@@ -1442,7 +1527,7 @@ function agendarLembrete(){
     if($('#tela-pais').classList.contains('aberta'))return;
     lembretesDados++;
     if(PAGINAS[S.pagina].dica){var alvo=$(PAGINAS[S.pagina].dica);if(alvo)mostrarDica(alvo);}
-    VOZ.falar(PAGINAS[S.pagina].fala);
+    VOZ.falar(PAGINAS[S.pagina].fala,{id:'instrucao-'+PAGINAS[S.pagina].id});
     agendarLembrete();
   },14000);
 }
