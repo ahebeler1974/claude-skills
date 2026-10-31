@@ -1,0 +1,9 @@
+node_modules/
+.remotion/
+out/
+# Saidas de midia (grandes); versione so o projeto editavel
+projects/**/export/*.mp4
+projects/**/preview/*.mp4
+projects/**/audio/*.wav
+public/audio/*.wav
+*.log

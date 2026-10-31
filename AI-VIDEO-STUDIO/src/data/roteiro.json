@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "projectId": "hematologia-001",
+    "titulo": "O que acontece com as hemacias quando o oxigenio comeca a faltar?",
+    "angulo": "explicacao-cientifica + viagem-microscopica",
+    "idioma": "pt-BR",
+    "formato": "9:16",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "duracaoTotalSegundos": 64,
+    "aviso": "Duracoes sao ESTIMADAS (~2.5 palavras/seg). Re-sincronizar com a duracao real do audio de narracao antes do render final."
+  },
+  "cenas": [
+    {
+      "id": "s1",
+      "nome": "Gancho visual",
+      "inicioSeg": 0,
+      "fimSeg": 5,
+      "narracao": "Seu corpo depende de uma entrega que nunca pode parar. O que acontece quando o oxigenio comeca a faltar?",
+      "tipoAnimacao": "camera-follow-hemacia",
+      "objetos": ["Hemacia", "VasoSanguineo", "ParticleField"],
+      "camera": "follow",
+      "textoTela": "O que acontece quando\\no oxigenio falta?",
+      "efeitos": ["glow", "vignette", "particulas"],
+      "transicao": "fade",
+      "obsCientifica": "Hemacia = disco biconcavo, sem nucleo (mamiferos). Nao e um ser consciente.",
+      "legendas": [
+        { "t0": 0.2, "t1": 2.6, "texto": "Seu corpo depende de uma entrega que nunca pode parar." },
+        { "t0": 2.8, "t1": 5.0, "texto": "O que acontece quando o oxigenio comeca a faltar?" }
+      ]
+    },
+    {
+      "id": "s2",
+      "nome": "Transporte de oxigenio",
+      "inicioSeg": 5,
+      "fimSeg": 16,
+      "narracao": "Dentro de cada hemacia existem milhoes de hemoglobinas. Cada hemoglobina tem quatro sitios e liga ate quatro moleculas de oxigenio. Nos pulmoes, onde o oxigenio e abundante, ela se carrega. Nos tecidos, onde o oxigenio e escasso, ela solta a carga.",
+      "tipoAnimacao": "zoom-in-hemoglobina",
+      "objetos": ["Hemacia", "Hemoglobina", "MoleculaOxigenio", "ScientificLabel"],
+      "camera": "zoom",
+      "textoTela": "Hemoglobina: ate 4 O2",
+      "efeitos": ["glow", "particulas"],
+      "transicao": "zoom",
+      "obsCientifica": "Hemoglobina = tetramero (4 subunidades, 4 grupos heme); ligacao reversivel e cooperativa (curva sigmoide).",
+      "legendas": [
+        { "t0": 5.2, "t1": 8.0, "texto": "Em cada hemacia ha milhoes de hemoglobinas." },
+        { "t0": 8.2, "t1": 11.2, "texto": "Cada uma liga ate quatro moleculas de oxigenio." },
+        { "t0": 11.4, "t1": 13.6, "texto": "Nos pulmoes ela se carrega..." },
+        { "t0": 13.8, "t1": 16.0, "texto": "...e nos tecidos solta o oxigenio." }
+      ]
+    },
+    {
+      "id": "s3",
+      "nome": "Reducao de disponibilidade",
+      "inicioSeg": 16,
+      "fimSeg": 28,
+      "narracao": "Mas nem sempre a oferta e suficiente. Se cai a pressao de oxigenio no ar, no sangue ou no fluxo que chega aos tecidos, a entrega diminui. Isso se chama hipoxia: oxigenio insuficiente nos tecidos. Atencao: nao e a mesma coisa que anemia, nem que hipoxemia.",
+      "tipoAnimacao": "ambiente-escurece",
+      "objetos": ["VasoSanguineo", "Hemacia", "CapilarRede", "ScientificLabel"],
+      "camera": "pan",
+      "textoTela": "HIPOXIA != hipoxemia != anemia",
+      "efeitos": ["dim", "particulas"],
+      "transicao": "fade",
+      "obsCientifica": "Hipoxia: O2 inadequado nos tecidos. Hipoxemia: baixa pO2/saturacao arterial. Anemia: baixa massa de hemoglobina (pO2 arterial pode ser normal). Sao conceitos distintos.",
+      "legendas": [
+        { "t0": 16.2, "t1": 19.0, "texto": "Nem sempre a oferta e suficiente." },
+        { "t0": 19.2, "t1": 22.6, "texto": "Menos oxigenio no ar, no sangue ou no fluxo = menos entrega." },
+        { "t0": 22.8, "t1": 25.4, "texto": "Isso e hipoxia: O2 insuficiente nos tecidos." },
+        { "t0": 25.6, "t1": 28.0, "texto": "Nao confunda com hipoxemia ou anemia." }
+      ]
+    },
+    {
+      "id": "s4",
+      "nome": "Resposta do organismo",
+      "inicioSeg": 28,
+      "fimSeg": 42,
+      "narracao": "O corpo reage rapido. A respiracao acelera para captar mais oxigenio. O coracao bombeia com mais forca para distribuir o que ainda ha. E a propria hemoglobina ajusta sua afinidade, liberando mais oxigenio justamente onde ele e mais necessario. Com o tempo, o rim libera eritropoietina e estimula a producao de novas hemacias.",
+      "tipoAnimacao": "sistema-circulatorio",
+      "objetos": ["CapilarRede", "Hemacia", "MoleculaOxigenio", "ScientificLabel"],
+      "camera": "pan",
+      "textoTela": "Respostas compensatorias",
+      "efeitos": ["glow", "pulso", "particulas"],
+      "transicao": "fade",
+      "obsCientifica": "Respostas: hiperventilacao (quimiorreceptores), aumento do debito cardiaco, efeito Bohr e 2,3-BPG deslocam a curva a direita (mais O2 aos tecidos), e aumento de EPO renal -> eritropoiese. Mecanismos coexistem; nem toda causa e igual.",
+      "legendas": [
+        { "t0": 28.2, "t1": 30.8, "texto": "O corpo reage rapido." },
+        { "t0": 31.0, "t1": 33.8, "texto": "A respiracao acelera para captar mais O2." },
+        { "t0": 34.0, "t1": 36.6, "texto": "O coracao bombeia com mais forca." },
+        { "t0": 36.8, "t1": 39.4, "texto": "A hemoglobina libera mais O2 onde ele falta." },
+        { "t0": 39.6, "t1": 42.0, "texto": "E o rim estimula novas hemacias (EPO)." }
+      ]
+    },
+    {
+      "id": "s5",
+      "nome": "Consequencias da hipoxia",
+      "inicioSeg": 42,
+      "fimSeg": 55,
+      "narracao": "Se mesmo assim o oxigenio nao chega, a celula muda seu metabolismo. Sem oxigenio suficiente, a mitocondria produz menos energia, e a celula recorre a via anaerobia, acumulando lactato. E uma solucao de emergencia, limitada. Se a falta persiste, o funcionamento celular e ameacado.",
+      "tipoAnimacao": "metabolismo-celular",
+      "objetos": ["CelulaGenerica", "MoleculaOxigenio", "ScientificLabel"],
+      "camera": "zoom",
+      "textoTela": "Menos O2 = menos ATP",
+      "efeitos": ["dim", "glitch-suave"],
+      "transicao": "fade",
+      "obsCientifica": "Fosforilacao oxidativa depende de O2. Na hipoxia: queda de ATP, mudanca para glicolise anaerobia, acumulo de lactato; HIF-1alpha coordena adaptacao. Lesao depende de intensidade e duracao. Evitar dramatizacao incorreta.",
+      "legendas": [
+        { "t0": 42.2, "t1": 45.0, "texto": "Se o oxigenio ainda nao chega..." },
+        { "t0": 45.2, "t1": 48.0, "texto": "...a mitocondria produz menos energia." },
+        { "t0": 48.2, "t1": 51.0, "texto": "A celula recorre a via anaerobia e acumula lactato." },
+        { "t0": 51.2, "t1": 55.0, "texto": "Uma saida de emergencia, limitada no tempo." }
+      ]
+    },
+    {
+      "id": "s6",
+      "nome": "Encerramento",
+      "inicioSeg": 55,
+      "fimSeg": 64,
+      "narracao": "Ou seja: a hemacia nao luta sozinha. Ela faz parte de um sistema inteiro que detecta, compensa e tenta proteger cada celula. Qual dessas respostas do corpo mais te surpreendeu?",
+      "tipoAnimacao": "recapitulacao",
+      "objetos": ["Hemacia", "ClosingCard"],
+      "camera": "zoom-out",
+      "textoTela": "O corpo inteiro trabalha pelo O2",
+      "efeitos": ["glow"],
+      "transicao": "fade",
+      "obsCientifica": "Recapitulacao fiel: transporte -> deteccao -> compensacao. Pergunta final sem sensacionalismo.",
+      "legendas": [
+        { "t0": 55.2, "t1": 58.0, "texto": "A hemacia nao trabalha sozinha." },
+        { "t0": 58.2, "t1": 61.0, "texto": "Um sistema inteiro detecta e compensa." },
+        { "t0": 61.2, "t1": 64.0, "texto": "Qual resposta do corpo mais te surpreendeu?" }
+      ]
+    }
+  ]
+}

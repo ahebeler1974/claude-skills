@@ -1,0 +1,88 @@
+1
+00:00:00,200 --> 00:00:02,600
+Seu corpo depende de uma entrega que nunca pode parar.
+
+2
+00:00:02,800 --> 00:00:05,000
+O que acontece quando o oxigenio comeca a faltar?
+
+3
+00:00:05,200 --> 00:00:08,000
+Em cada hemacia ha milhoes de hemoglobinas.
+
+4
+00:00:08,200 --> 00:00:11,200
+Cada uma liga ate quatro moleculas de oxigenio.
+
+5
+00:00:11,400 --> 00:00:13,600
+Nos pulmoes ela se carrega...
+
+6
+00:00:13,800 --> 00:00:16,000
+...e nos tecidos solta o oxigenio.
+
+7
+00:00:16,200 --> 00:00:19,000
+Nem sempre a oferta e suficiente.
+
+8
+00:00:19,200 --> 00:00:22,600
+Menos oxigenio no ar, no sangue ou no fluxo = menos entrega.
+
+9
+00:00:22,800 --> 00:00:25,400
+Isso e hipoxia: O2 insuficiente nos tecidos.
+
+10
+00:00:25,600 --> 00:00:28,000
+Nao confunda com hipoxemia ou anemia.
+
+11
+00:00:28,200 --> 00:00:30,800
+O corpo reage rapido.
+
+12
+00:00:31,000 --> 00:00:33,800
+A respiracao acelera para captar mais O2.
+
+13
+00:00:34,000 --> 00:00:36,600
+O coracao bombeia com mais forca.
+
+14
+00:00:36,800 --> 00:00:39,400
+A hemoglobina libera mais O2 onde ele falta.
+
+15
+00:00:39,600 --> 00:00:42,000
+E o rim estimula novas hemacias (EPO).
+
+16
+00:00:42,200 --> 00:00:45,000
+Se o oxigenio ainda nao chega...
+
+17
+00:00:45,200 --> 00:00:48,000
+...a mitocondria produz menos energia.
+
+18
+00:00:48,200 --> 00:00:51,000
+A celula recorre a via anaerobia e acumula lactato.
+
+19
+00:00:51,200 --> 00:00:55,000
+Uma saida de emergencia, limitada no tempo.
+
+20
+00:00:55,200 --> 00:00:58,000
+A hemacia nao trabalha sozinha.
+
+21
+00:00:58,200 --> 00:01:01,000
+Um sistema inteiro detecta e compensa.
+
+22
+00:01:01,200 --> 00:01:04,000
+Qual resposta do corpo mais te surpreendeu?
+
