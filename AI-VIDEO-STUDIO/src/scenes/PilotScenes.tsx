@@ -177,7 +177,7 @@ export const Scene5: React.FC = () => {
           <CelulaGenerica size={760} energy={energy} />
         </AbsoluteFill>
       </CameraRig>
-      <AbsoluteFill style={{ background: `rgba(2,8,16,${interpolate(energy, [0.95, 0.25], [0, 0.35])})` }} />
+      <AbsoluteFill style={{ background: `rgba(2,8,16,${interpolate(frame, [0, dur], [0, 0.35], { extrapolateRight: "clamp" })})` }} />
       <ScientificLabel text={C.s5.textoTela} x={70} y={height * 0.16} />
       <SubtitleOverlay legendas={C.s5.legendas} offsetSeg={C.s5.inicioSeg} />
     </SceneFade>
