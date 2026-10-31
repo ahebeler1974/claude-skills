@@ -1,0 +1,23 @@
+{
+  "name": "ai-video-studio",
+  "version": "0.1.0",
+  "description": "AI VIDEO STUDIO — Science & Health. Estudio reutilizavel de videos cientificos animados com Remotion (React), narracao local gratuita (Piper) e FFmpeg. Sem custos alem da assinatura do Claude.",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "studio": "remotion studio",
+    "preview": "remotion render HematologiaPilot projects/hematologia-001/preview/preview.mp4 --frames=0-239 --scale=0.5 --browser-executable=/usr/bin/google-chrome",
+    "render": "remotion render HematologiaPilot projects/hematologia-001/export/video_sem_legendas.mp4 --browser-executable=/usr/bin/google-chrome",
+    "render:local": "remotion render HematologiaPilot projects/hematologia-001/export/video_sem_legendas.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "remotion": "4.0.539"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.0",
+    "typescript": "5.6.3"
+  }
+}
